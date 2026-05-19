@@ -149,3 +149,6 @@ REST_FRAMEWORK = {
 }  
 #q3
 AI_ENGINE_PATH = os.path.join(BASE_DIR.parent, 'ai_engine')
+
+
+ALLOWED_HOSTS = ["*"]
