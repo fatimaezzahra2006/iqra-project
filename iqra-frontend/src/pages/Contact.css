@@ -1,0 +1,35 @@
+.page-contact { background: #f3f3f3; font-family: 'Satoshi', Georgia, serif; }
+
+.contact-hero { text-align: center; padding: 80px 40px 40px; }
+.contact-hero h1 { font-size: 48px; font-style: italic; font-weight: 300; color: #191a23; margin-bottom: 12px; }
+.contact-hero p { font-size: 18px; color: #8e55a1; }
+
+.contact-body { display: flex; gap: 0; max-width: 1100px; margin: 0 auto 80px; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+
+.contact-info { background: #8e55a1; color: #fff; padding: 48px 40px; flex: 0 0 360px; display: flex; flex-direction: column; gap: 20px; }
+.contact-info h3 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.contact-info > p { font-size: 16px; opacity: 0.85; }
+.info-item { font-size: 15px; display: flex; gap: 10px; align-items: flex-start; line-height: 1.6; }
+.social-links { display: flex; gap: 16px; margin-top: 24px; font-size: 28px; cursor: pointer; }
+
+.contact-form { flex: 1; padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; }
+.form-row { display: flex; gap: 24px; }
+.form-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 14px; font-style: italic; color: #555; }
+.form-group input, .form-group textarea { border: none; border-bottom: 1.5px solid #ccc; background: transparent; padding: 8px 4px; font-size: 16px; outline: none; font-family: inherit; resize: none; transition: border-color 0.2s; }
+.form-group input:focus, .form-group textarea:focus { border-bottom-color: #8e55a1; }
+
+.radio-group { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 8px; }
+.radio-label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #555; cursor: pointer; }
+.radio-label input { accent-color: #8e55a1; }
+
+.form-submit { display: flex; justify-content: flex-end; margin-top: 8px; }
+.btn-purple { background: #8e55a1; color: #fff; border: none; padding: 14px 36px; border-radius: 200px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.btn-purple:hover { background: #7a4490; }
+
+@media (max-width: 900px) {
+  .contact-body { flex-direction: column; margin: 0 20px 60px; }
+  .contact-info { flex: none; }
+  .form-row { flex-direction: column; }
+  .contact-hero h1 { font-size: 32px; }
+}

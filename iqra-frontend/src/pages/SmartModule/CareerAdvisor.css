@@ -1,0 +1,350 @@
+/* ===== CAREER ADVISOR ===== */
+
+.career-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.career-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.career-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.career-header h2 {
+  font-size: 1.8rem;
+  color: #7B2FBE;
+  margin-bottom: 0.5rem;
+}
+
+.career-subtitle {
+  color: #555;
+  font-size: 1rem;
+}
+
+.career-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 16px rgba(123, 47, 190, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.career-card h3 {
+  color: #1A1A1A;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #1A1A1A;
+  font-size: 0.95rem;
+}
+
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #7B2FBE;
+  background: #fff;
+}
+
+.char-count {
+  font-size: 0.8rem;
+  color: #999;
+  text-align: right;
+}
+
+/* Progress bar */
+.progress-bar-wrapper {
+  background: #e0e0e0;
+  border-radius: 100px;
+  height: 8px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #7B2FBE, #F5A623);
+  border-radius: 100px;
+  transition: width 0.4s ease;
+}
+
+.progress-label {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.encouragement-box {
+  background: linear-gradient(135deg, #f3e8ff, #fff8ec);
+  border-left: 4px solid #7B2FBE;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #5a1fa0;
+}
+
+.question-card .question-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #1A1A1A;
+  margin-bottom: 1.2rem;
+}
+
+.question-card textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.question-card textarea:focus {
+  outline: none;
+  border-color: #7B2FBE;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+/* Loading */
+.career-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.career-loading h3 {
+  color: #7B2FBE;
+  font-size: 1.3rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.career-loading p {
+  color: #666;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.loading-spinner {
+  width: 52px;
+  height: 52px;
+  border: 5px solid #e0e0e0;
+  border-top-color: #7B2FBE;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Boutons */
+.btn-primary {
+  background: #1A1A1A;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #7B2FBE;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #7B2FBE;
+  border: 2px solid #7B2FBE;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #7B2FBE;
+  color: #fff;
+}
+
+.error-msg {
+  color: #e53935;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Résultats */
+.result-intro-card {
+  background: linear-gradient(135deg, #7B2FBE, #a855f7);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+.result-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.result-section h3 {
+  color: #7B2FBE;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.result-section ul {
+  padding-left: 1.5rem;
+}
+
+.result-section ul li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.result-section.limiting {
+  border-left: 4px solid #F5A623;
+}
+
+.result-section.limiting h3 {
+  color: #c47a00;
+}
+
+.filiere-card {
+  background: #f8f4ff;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.filiere-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filiere-rank {
+  background: #7B2FBE;
+  color: #fff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.filiere-header h4 {
+  flex: 1;
+  margin: 0;
+  font-size: 1rem;
+  color: #1A1A1A;
+}
+
+.filiere-score {
+  background: #7B2FBE;
+  color: #fff;
+  border-radius: 100px;
+  padding: 0.2rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.filiere-bar-wrapper {
+  background: #e0d4f7;
+  border-radius: 100px;
+  height: 6px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.filiere-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #7B2FBE, #F5A623);
+  border-radius: 100px;
+}
+
+.filiere-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.result-cloture-card {
+  background: linear-gradient(135deg, #fff8ec, #fffbf0);
+  border: 2px solid #F5A623;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  color: #7a5500;
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+
+/* ── Graphiques ── */
+.chart-wrapper {
+  max-width: 520px;
+  margin: 1.5rem auto 0;
+}
+
+.chart-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}

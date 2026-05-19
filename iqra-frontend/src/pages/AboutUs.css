@@ -1,0 +1,40 @@
+.page-about { background: #f3f3f3; font-family: 'Satoshi', Georgia, serif; }
+
+.about-hero { text-align: center; padding: 80px 40px 60px; }
+.about-hero h1 { font-size: 48px; font-style: italic; font-weight: 300; color: #191a23; margin-bottom: 16px; }
+.about-hero p { font-size: 18px; color: #666; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+.about-histoire { display: flex; gap: 60px; align-items: center; padding: 80px 80px; max-width: 1300px; margin: 0 auto; flex-wrap: wrap; }
+.about-text { flex: 1; }
+.about-text h2 { font-size: 40px; font-style: italic; font-weight: 300; color: #191a23; margin-bottom: 16px; }
+.about-text p { font-size: 18px; color: #666; margin-bottom: 20px; line-height: 1.7; }
+.about-text ul { list-style: none; padding: 0; }
+.about-text ul li { font-size: 18px; font-weight: 500; padding: 8px 0; color: #191a23; }
+.about-text ul li::before { content: '→ '; color: #8e55a1; }
+.about-image { flex: 1; font-size: 180px; text-align: center; background: rgba(142,85,161,0.08); border-radius: 20px; padding: 40px; min-height: 300px; display: flex; align-items: center; justify-content: center; }
+
+.about-mission { background: #8e55a1; padding: 80px 40px; text-align: center; color: #fff; }
+.about-mission h2 { font-size: 44px; font-style: italic; font-weight: 300; margin-bottom: 16px; }
+.about-mission p { font-size: 20px; font-weight: 300; margin-bottom: 32px; opacity: 0.9; max-width: 700px; margin-left: auto; margin-right: auto; }
+
+.about-vision { padding: 80px 40px; text-align: center; max-width: 1300px; margin: 0 auto; }
+.about-vision h2 { font-size: 44px; font-style: italic; font-weight: 300; color: #191a23; margin-bottom: 40px; }
+.vision-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; max-width: 900px; margin: 0 auto; }
+.vision-card { background: #fff; border-radius: 16px; padding: 28px; font-size: 18px; color: #555; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+.about-different { background: rgba(142,85,161,0.06); padding: 80px 40px; text-align: center; }
+.about-different h2 { font-size: 44px; font-style: italic; font-weight: 300; color: #191a23; margin-bottom: 40px; }
+.different-grid { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
+.diff-card { background: #fff; border-radius: 12px; padding: 20px 24px; font-size: 16px; color: #444; box-shadow: 0 4px 12px rgba(0,0,0,0.06); flex: 1; min-width: 180px; }
+
+.about-cta { padding: 80px 40px; text-align: center; }
+.about-cta h2 { font-size: 48px; font-weight: 300; color: #8e55a1; margin-bottom: 32px; line-height: 1.4; }
+.cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-purple { background: #8e55a1; color: #fff; border: none; padding: 14px 36px; border-radius: 200px; font-size: 18px; font-weight: 700; cursor: pointer; }
+.btn-dark { background: #191a23; color: #fff; border: none; padding: 14px 36px; border-radius: 200px; font-size: 18px; font-weight: 700; cursor: pointer; }
+
+@media (max-width: 900px) {
+  .about-histoire { flex-direction: column; padding: 60px 20px; }
+  .vision-cards { grid-template-columns: 1fr; }
+  .about-hero h1, .about-vision h2, .about-different h2 { font-size: 32px; }
+}
