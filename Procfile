@@ -1,0 +1,1 @@
+web: gunicorn iqra_backend.wsgi
