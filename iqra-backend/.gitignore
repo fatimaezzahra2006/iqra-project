@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+
+# ChromaDB
+ai_engine/chroma_storage/
+
+# Django media
+iqra-backend/media/
+
+# Windows
+desktop.ini

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import StudyPlan from "./StudyPlan";
-import GapAnalyzer from "./GapAnalyzer";
+import GapAnalyzer from "./VisualLearning";
 import CareerAdvisor from "./CareerAdvisor";
 import "./SmartModule.css";
 

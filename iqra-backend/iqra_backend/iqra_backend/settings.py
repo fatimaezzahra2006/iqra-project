@@ -159,6 +159,5 @@ AI_ENGINE_PATH = os.path.join(BASE_DIR.parent, 'ai_engine')
 
 ALLOWED_HOSTS = ["*"]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

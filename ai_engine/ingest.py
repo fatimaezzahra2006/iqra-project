@@ -13,12 +13,14 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data_files")
 CAREER_DIR = os.path.join(BASE_DIR, "data_files", "career")
+STUDY_HABITS_DIR = os.path.join(BASE_DIR, "data_files", "procrastination , stress and study habits")
 CHROMA_DIR = os.path.join(BASE_DIR, "chroma_storage")
 
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
-COLLECTION_IQRA    = "iqra_knowledge"   # cours + exos BAC
-COLLECTION_CAREER  = "career_knowledge" # fichiers ecole/ + psyco/
+COLLECTION_IQRA         = "iqra_knowledge"          # cours + exos BAC
+COLLECTION_CAREER       = "career_knowledge"         # fichiers ecole/ + psyco/
+COLLECTION_STUDY_HABITS = "study_habits_knowledge"   # procrastination + stress + study habits
 
 # ══════════════════════════════════════════
 # INIT MODÈLE + CHROMADB
@@ -46,6 +48,15 @@ except:
     pass
 collection_career = client.create_collection(COLLECTION_CAREER)
 print(f"✅ Collection '{COLLECTION_CAREER}' créée.")
+
+# ── Recréer la collection STUDY HABITS ──
+try:
+    client.delete_collection(COLLECTION_STUDY_HABITS)
+    print(f"🗑️  Ancienne collection '{COLLECTION_STUDY_HABITS}' supprimée.")
+except:
+    pass
+collection_study_habits = client.create_collection(COLLECTION_STUDY_HABITS)
+print(f"✅ Collection '{COLLECTION_STUDY_HABITS}' créée.")
 
 # ══════════════════════════════════════════
 # TEXT SPLITTER
@@ -106,6 +117,34 @@ def extract_metadata_career(filepath):
         pass
     return metadata
 
+
+def extract_metadata_study_habits(filepath):
+    """
+    Extrait les métadonnées depuis le chemin du fichier study habits.
+    Tous les fichiers sont à plat dans le dossier → topic déduit du nom de fichier.
+    """
+    filename = os.path.basename(filepath)
+    filename_lower = filename.lower()
+
+    # Déduction du topic à partir du nom de fichier
+    if "procrastin" in filename_lower:
+        topic = "procrastination"
+    elif "stress" in filename_lower or "anxiety" in filename_lower:
+        topic = "stress"
+    elif "time" in filename_lower:
+        topic = "time_management"
+    elif "study" in filename_lower or "habit" in filename_lower:
+        topic = "study_habits"
+    elif "memory" in filename_lower:
+        topic = "memory"
+    else:
+        topic = "general"
+
+    return {
+        "topic": topic,
+        "filename": filename
+    }
+
 # ══════════════════════════════════════════
 # EXTRACTION TEXTE PDF
 # ══════════════════════════════════════════
@@ -132,8 +171,11 @@ def ingest_iqra_pdfs():
     total_files = 0
 
     for root, dirs, files in os.walk(DATA_DIR):
-        # Ignorer le dossier career/ entièrement
-        if "career" in root.replace("\\", "/").split("/"):
+        # Ignorer career/ et procrastination.../ entièrement
+        root_normalized = root.replace("\\", "/")
+        if "career" in root_normalized.split("/"):
+            continue
+        if "procrastination , stress and study habits" in root_normalized:
             continue
 
         for filename in files:
@@ -163,10 +205,10 @@ def ingest_iqra_pdfs():
                     embeddings=[embedding],
                     documents=[chunk],
                     metadatas=[{
-                        "niveau":     metadata["niveau"],
-                        "matiere":    metadata["matiere"],
-                        "type_doc":   metadata["type_doc"],
-                        "filename":   metadata["filename"],
+                        "niveau":      metadata["niveau"],
+                        "matiere":     metadata["matiere"],
+                        "type_doc":    metadata["type_doc"],
+                        "filename":    metadata["filename"],
                         "chunk_index": i
                     }]
                 )
@@ -234,6 +276,60 @@ def ingest_career_pdfs():
 
 
 # ══════════════════════════════════════════
+# INGESTION — STUDY HABITS (procrastination + stress)
+# ══════════════════════════════════════════
+
+def ingest_study_habits_pdfs():
+    total_chunks = 0
+    total_files = 0
+
+    if not os.path.exists(STUDY_HABITS_DIR):
+        print(f"⚠️  Dossier study habits introuvable : {STUDY_HABITS_DIR}")
+        return
+
+    for root, dirs, files in os.walk(STUDY_HABITS_DIR):
+        for filename in files:
+            if not filename.lower().endswith(".pdf"):
+                continue
+
+            filepath = os.path.join(root, filename)
+            print(f"\n📄 [STUDY_HABITS] {filepath}")
+
+            metadata = extract_metadata_study_habits(filepath)
+            print(f"   🏷️  topic={metadata['topic']}")
+
+            text = extract_text_from_pdf(filepath)
+            if not text:
+                print("   ⚠️  Aucun texte extrait, fichier ignoré.")
+                continue
+
+            print(f"   📝 {len(text)} caractères extraits.")
+            chunks = splitter.split_text(text)
+            print(f"   ✂️  {len(chunks)} chunks créés.")
+
+            for i, chunk in enumerate(chunks):
+                chunk_id = f"study_habits_{metadata['topic']}_{filename}_{i}"
+                embedding = embedder.encode(chunk).tolist()
+                collection_study_habits.add(
+                    ids=[chunk_id],
+                    embeddings=[embedding],
+                    documents=[chunk],
+                    metadatas=[{
+                        "topic":       metadata["topic"],
+                        "filename":    metadata["filename"],
+                        "chunk_index": i
+                    }]
+                )
+
+            total_chunks += len(chunks)
+            total_files += 1
+
+    print(f"\n{'═'*50}")
+    print(f"✅ STUDY HABITS TERMINÉ — {total_files} fichiers | {total_chunks} chunks")
+    print(f"{'═'*50}\n")
+
+
+# ══════════════════════════════════════════
 # LANCER
 # ══════════════════════════════════════════
 
@@ -244,8 +340,10 @@ if __name__ == "__main__":
 
     ingest_iqra_pdfs()
     ingest_career_pdfs()
+    ingest_study_habits_pdfs()
 
     print("═"*50)
     print("🎉 INGESTION TOTALE TERMINÉE")
     print(f"   💾 ChromaDB path : {CHROMA_DIR}")
+    print(f"   📚 Collections : {COLLECTION_IQRA} | {COLLECTION_CAREER} | {COLLECTION_STUDY_HABITS}")
     print("═"*50 + "\n")
