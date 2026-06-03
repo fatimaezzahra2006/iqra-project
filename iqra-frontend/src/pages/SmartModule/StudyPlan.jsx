@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+﻿import { useState, useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "./SmartModule.css";
 
@@ -23,202 +24,6 @@ function getTheme(facteurs) {
   if (facteurs.includes("reseaux"))         return PSYCHO_THEMES.reseaux;
   return PSYCHO_THEMES.default;
 }
-
-// ══════════════════════════════════════════
-// TRANSLATIONS
-// ══════════════════════════════════════════
-const T = {
-  fr: {
-    title: "Plan de Rattrapage", subtitle: "Ton accompagnement personnalisé",
-    next: "Continuer", back: "Retour", backHome: "← Retour",
-    startChallenge: "Commencer le défi", seeMyPlan: "Créer mon plan",
-    loading: "Préparation…", newPlan: "Nouveau plan", exportPdf: "Exporter PDF",
-    chapPlaceholder: "Ex : suites numériques, dérivation, intégration…",
-    chapHint: "Sépare les chapitres par des virgules",
-    chapSuggest: "Suggestions rapides",
-    weeksLabel: "Semaines", daysLabel: "Jours par semaine", hoursLabel: "Heures par jour",
-    totalOk: "heures de travail", totalWarn: "Plan intensif — on optimise chaque minute",
-    moreInfo: "Plus tu précises, plus le plan sera calibré pour toi",
-    bloc3Title: "Où tu en es", bloc3Sub: "Une évaluation honnête aide à construire un plan réaliste",
-    niveau0: "Je pars de zéro", niveau0sub: "Les bases ne sont pas encore claires",
-    niveau1: "J'ai quelques bases", niveau1sub: "Mais je bloque souvent",
-    niveau2: "Je comprends la théorie", niveau2sub: "Mais les exercices me résistent",
-    niveau3: "Bonne maîtrise", niveau3sub: "Je manque d'entraînement",
-    bloc4Title: "Ce qui freine ta progression", bloc4Sub: "On va l'intégrer et le contourner",
-    proc: "La procrastination", procSub: "Difficile de démarrer",
-    reseaux: "Les distractions numériques", reseauxSub: "Le téléphone capte mon attention",
-    panique: "L'anxiété face à la difficulté", paniqueSub: "Le stress me paralyse",
-    motiv: "Le manque de motivation", motivSub: "Du mal à trouver l'élan",
-    rien: "Aucun de ces obstacles", rienSub: "J'ai juste besoin d'un plan structuré",
-    // Motivation questions
-    motivTitle: "Avant de commencer…", motivSub: "Quelques questions pour mieux te comprendre",
-    motivPlaceholder: "Réponds librement, il n'y a pas de bonne ou mauvaise réponse…",
-    motivNext: "Continuer vers le diagnostic",
-    motivEncourage: "Tes réponses vont rendre ton plan beaucoup plus précis 💪",
-    // Psycho profile
-    psychoAnalyzing: "Analyse de ton profil…",
-    // Progressive quiz
-    quizBasicTitle: "Fondamentaux", quizMediumTitle: "Application", quizHighTitle: "Niveau BAC",
-    quizBasicSub: "Questions sur les concepts de base", quizMediumSub: "Application des méthodes", quizHighSub: "Raisonnement style BAC",
-    quizUnlocked: "✓ Niveau débloqué", quizLocked: "Niveau verrouillé",
-    quizWarn: "Réponds à toutes les questions",
-    quizNext: "Valider ce niveau", quizSeeScore: "Voir mon score",
-    quizLevelLabel: "Niveau", quizUnlockHint: "Score ≥",
-    scoreSummaryTitle: "Ton diagnostic",
-    // Plan
-    planTitle: "Ton plan", scoreTitle: "Score",
-    score5: "Excellente maîtrise — on affine les détails",
-    score4: "Très bon niveau — quelques points à consolider",
-    score3: "Bon niveau — le plan va renforcer les acquis",
-    score2: "Des bases solides — on va les structurer",
-    score1: "On part des fondations — c'est le bon moment",
-    score0: "On repart de zéro — ensemble, étape par étape",
-    weekLabel: "Semaine", actVideo: "Vidéo", actExercice: "Exercice", actChatbot: "Chatbot",
-    momentLabel: "Quand", whyLabel: "Pourquoi", tipLabel: "Conseil", phaseLabel: "Phase",
-    finalAdvice: "Pour aller plus loin", weeklyTime: "/ semaine",
-    q1: "Ta filière", q2: "La matière", q3: "Les chapitres concernés",
-    q4: "Ton temps disponible", q5: "Ton niveau actuel", q6: "Tes obstacles",
-    errorComplete: "Complète cette étape pour continuer.", errorApi: "Erreur : ",
-    step: "Étape", of: "sur",
-    pdfGenerating: "⏳ Génération…",
-    profileDetected: "Profil détecté",
-    profileMsg: "Ce plan tient compte de tes obstacles et de ta psychologie",
-    basic: "Fondamentaux", medium: "Application", high: "Maîtrise BAC",
-    yourScore: "Ton score",
-    levelDone: "✓ Complété",
-    continueToMedium: "Continuer → Application",
-    continueToHigh: "Continuer → Niveau BAC",
-    generatePlan: "Générer mon plan personnalisé",
-    skipLevel: "Passer ce niveau",
-    levelNotUnlocked: "Pas encore débloqué",
-    basicPass: "Score suffisant pour passer au niveau suivant",
-    basicFail: "Continue avec ces bases — le plan va t'aider",
-  },
-  ar: {
-    title: "خطة الاستدراك", subtitle: "مرافقتك الشخصية",
-    next: "التالي", back: "رجوع", backHome: "→ رجوع",
-    startChallenge: "ابدأ التحدي", seeMyPlan: "أنشئ خطتي",
-    loading: "جاري التحضير…", newPlan: "خطة جديدة", exportPdf: "تصدير PDF",
-    chapPlaceholder: "مثلا: المتتاليات، النهايات، التكامل…",
-    chapHint: "افصل الفصول بفاصلة",
-    chapSuggest: "اقتراحات",
-    weeksLabel: "الأسابيع", daysLabel: "الأيام في الأسبوع", hoursLabel: "الساعات يومياً",
-    totalOk: "ساعة عمل", totalWarn: "خطة مكثفة — نستثمر كل دقيقة",
-    moreInfo: "كلما دققت، كانت الخطة أدق",
-    bloc3Title: "مستواك الحالي", bloc3Sub: "تقييم صادق يساعد على بناء خطة واقعية",
-    niveau0: "أبدأ من الصفر", niveau0sub: "الأسس لم تترسخ بعد",
-    niveau1: "لدي بعض الأسس", niveau1sub: "لكن كثيرا ما أتعثر",
-    niveau2: "أفهم النظرية", niveau2sub: "التمارين تعيقني",
-    niveau3: "إتقان جيد", niveau3sub: "أحتاج للتدرب أكثر",
-    bloc4Title: "ما يعيق تقدمك", bloc4Sub: "سنأخذه بعين الاعتبار",
-    proc: "المماطلة", procSub: "يصعب البدء",
-    reseaux: "التشتت الرقمي", reseauxSub: "الهاتف يشغلني",
-    panique: "القلق أمام الصعوبة", paniqueSub: "التوتر يشلّني",
-    motiv: "غياب الدافعية", motivSub: "صعب إيجاد الحافز",
-    rien: "لا شيء من هذا", rienSub: "أحتاج فقط لخطة منظمة",
-    motivTitle: "قبل أن نبدأ…", motivSub: "بعض الأسئلة لفهمك بشكل أفضل",
-    motivPlaceholder: "أجب بحرية، لا توجد إجابة صحيحة أو خاطئة…",
-    motivNext: "المتابعة نحو التشخيص",
-    motivEncourage: "إجاباتك ستجعل خطتك أدق 💪",
-    psychoAnalyzing: "تحليل ملفك الشخصي…",
-    quizBasicTitle: "الأسس", quizMediumTitle: "التطبيق", quizHighTitle: "مستوى البكالوريا",
-    quizBasicSub: "أسئلة حول المفاهيم الأساسية", quizMediumSub: "تطبيق المناهج", quizHighSub: "استدلال على مستوى الباك",
-    quizUnlocked: "✓ مستوى مفتوح", quizLocked: "المستوى مقفل",
-    quizWarn: "أجب على جميع الأسئلة",
-    quizNext: "تأكيد هذا المستوى", quizSeeScore: "اطلع على نتيجتي",
-    quizLevelLabel: "المستوى", quizUnlockHint: "نتيجة ≥",
-    scoreSummaryTitle: "تشخيصك",
-    planTitle: "خطتك", scoreTitle: "النتيجة",
-    score5: "إتقان ممتاز — نصقل التفاصيل",
-    score4: "مستوى جيد جداً — بعض النقاط للتعزيز",
-    score3: "مستوى جيد — الخطة ستقوي المكتسبات",
-    score2: "أسس متينة — سنبنيها معاً",
-    score1: "ننطلق من الأساس — الوقت مناسب",
-    score0: "نبدأ من الصفر — معاً خطوة خطوة",
-    weekLabel: "الأسبوع", actVideo: "فيديو", actExercice: "تمرين", actChatbot: "دردشة",
-    momentLabel: "متى", whyLabel: "لماذا", tipLabel: "نصيحة", phaseLabel: "مرحلة",
-    finalAdvice: "للمضي قُدُماً", weeklyTime: "/ أسبوع",
-    q1: "مسلكك", q2: "المادة", q3: "الفصول المعنية",
-    q4: "وقتك المتاح", q5: "مستواك الحالي", q6: "عوائقك",
-    errorComplete: "أكمل هذه الخطوة للمتابعة.", errorApi: "خطأ : ",
-    step: "الخطوة", of: "من",
-    pdfGenerating: "⏳ جاري التوليد…",
-    profileDetected: "الملف المكتشف",
-    profileMsg: "هذه الخطة تأخذ بعين الاعتبار عوائقك وعلم نفسك",
-    basic: "الأسس", medium: "التطبيق", high: "مستوى الباك",
-    yourScore: "نتيجتك",
-    levelDone: "✓ مكتمل",
-    continueToMedium: "المتابعة → التطبيق",
-    continueToHigh: "المتابعة → مستوى الباك",
-    generatePlan: "توليد خطتي الشخصية",
-    skipLevel: "تجاوز هذا المستوى",
-    levelNotUnlocked: "غير مفتوح بعد",
-    basicPass: "نتيجة كافية للانتقال إلى المستوى التالي",
-    basicFail: "استمر مع هذه الأسس — الخطة ستساعدك",
-  },
-  darija: {
-    title: "خطة الاستدراك", subtitle: "المرافقة الشخصية ديالك",
-    next: "التالي", back: "ارجع", backHome: "→ ارجع",
-    startChallenge: "بدا التحدي", seeMyPlan: "دير الخطة ديالي",
-    loading: "كيتحضر…", newPlan: "خطة جديدة", exportPdf: "صدر PDF",
-    chapPlaceholder: "مثلا: المتتاليات، النهايات…",
-    chapHint: "فرق الفصول بفاصلة",
-    chapSuggest: "اقتراحات",
-    weeksLabel: "الأسابيع", daysLabel: "الأيام فالأسبوع", hoursLabel: "الساعات فالنهار",
-    totalOk: "ساعة ديال الخدمة", totalWarn: "خطة مكثفة — كنستغلو كل دقيقة",
-    moreInfo: "قدر ما تكون دقيق، قدر ما تكون الخطة مزيانة",
-    bloc3Title: "فين واصل دابا", bloc3Sub: "كون صريح — هاد الشي غيعاونك",
-    niveau0: "كنبدأ من الصفر", niveau0sub: "الأساسيات ماحياش",
-    niveau1: "عندي شوية أساس", niveau1sub: "ولكن كتعثر كثير",
-    niveau2: "كنفهم النظرية", niveau2sub: "التمارين كيوقفوني",
-    niveau3: "إتقان مزيان", niveau3sub: "محتاج التدريب أكثر",
-    bloc4Title: "أشنو كيعيق تقدمك", bloc4Sub: "غنحطوه فالخطة",
-    proc: "التسويف", procSub: "صعب عليّ نبدأ",
-    reseaux: "التشتت الرقمي", reseauxSub: "التليفون كيشدني",
-    panique: "القلق حين تصعب", paniqueSub: "الضغط كيوقفني",
-    motiv: "غياب التحفيز", motivSub: "صعب نلقى الدافع",
-    rien: "والو من هاد", rienSub: "محتاج غير خطة منظمة",
-    motivTitle: "قبل ما نبداو…", motivSub: "شوية أسئلة باش نفهموك مزيان",
-    motivPlaceholder: "جاوب بحرية، ماكاينش جواب صح أو غلط…",
-    motivNext: "كمل نحو التشخيص",
-    motivEncourage: "جواباتك غتخلي الخطة ديالك أدق بزاف 💪",
-    psychoAnalyzing: "كيتحلل البروفيل ديالك…",
-    quizBasicTitle: "الأساسيات", quizMediumTitle: "التطبيق", quizHighTitle: "مستوى الباك",
-    quizBasicSub: "أسئلة على المفاهيم الأساسية", quizMediumSub: "تطبيق المناهج", quizHighSub: "استدلال كيما الباك",
-    quizUnlocked: "✓ مستوى مفتوح", quizLocked: "المستوى مقفل",
-    quizWarn: "جاوب على جميع الأسئلة",
-    quizNext: "تأكيد هاد المستوى", quizSeeScore: "شوف نتيجتي",
-    quizLevelLabel: "المستوى", quizUnlockHint: "نتيجة ≥",
-    scoreSummaryTitle: "التشخيص ديالك",
-    planTitle: "الخطة ديالك", scoreTitle: "النتيجة",
-    score5: "إتقان ممتاز — كنصقلو التفاصيل",
-    score4: "مستوى مزيان بزاف — شوية نقاط نقوّيوها",
-    score3: "مستوى مزيان — الخطة غتقوي المكتسبات",
-    score2: "أساس متين — غنبنيوه مع بعضياتنا",
-    score1: "كننطلقو من الأساس — الوقت مناسب",
-    score0: "كنبداو من الصفر — مع بعضياتنا خطوة خطوة",
-    weekLabel: "الأسبوع", actVideo: "فيديو", actExercice: "تمرين", actChatbot: "شات",
-    momentLabel: "فين", whyLabel: "علاش", tipLabel: "النصيحة", phaseLabel: "المرحلة",
-    finalAdvice: "باش تكمل", weeklyTime: "/ أسبوع",
-    q1: "المسلك ديالك", q2: "المادة", q3: "الفصول المعنية",
-    q4: "الوقت المتاح", q5: "مستواك دابا", q6: "العوائق ديالك",
-    errorComplete: "كمل هاد الخطوة قبل ما تكمل.", errorApi: "خطأ : ",
-    step: "الخطوة", of: "من",
-    pdfGenerating: "⏳ كيتحضر…",
-    profileDetected: "البروفيل المكتشف",
-    profileMsg: "هاد الخطة كتحط بعين الاعتبار العوائق والسيكولوجية ديالك",
-    basic: "الأساسيات", medium: "التطبيق", high: "مستوى الباك",
-    yourScore: "النتيجة ديالك",
-    levelDone: "✓ مكمل",
-    continueToMedium: "كمل → التطبيق",
-    continueToHigh: "كمل → مستوى الباك",
-    generatePlan: "دير الخطة الشخصية ديالي",
-    skipLevel: "تجاوز هاد المستوى",
-    levelNotUnlocked: "ماحياش مفتوح بعد",
-    basicPass: "النتيجة كافية للمستوى الجاي",
-    basicFail: "كمل مع هاد الأساس — الخطة غتعاونك",
-  },
-};
 
 // ══════════════════════════════════════════
 // FILIERES
@@ -252,30 +57,17 @@ const QUIZ_UNLOCK = { basic_to_medium: 4, medium_to_high: 3 };
 const QUIZ_TOTALS = { basic: 7, medium: 4, high: 4 };
 
 // ══════════════════════════════════════════
-// SKELETON MESSAGES
+// SKELETON MESSAGES — will be resolved at runtime using t()
 // ══════════════════════════════════════════
-const SKELETON_MSGS = {
-  motiv: {
-    fr:     ["Génération des questions…","Analyse de ton contexte…","Presque prêt…"],
-    ar:     ["توليد الأسئلة…","تحليل سياقك…","تقريبا جاهز…"],
-    darija: ["كيتولدو الأسئلة…","كيتحلل الوضع ديالك…","قريبا…"],
-  },
-  psycho: {
-    fr:     ["Analyse de ton profil…","Détection des patterns…","Calibrage du plan…"],
-    ar:     ["تحليل ملفك الشخصي…","كشف الأنماط…","معايرة الخطة…"],
-    darija: ["كيتحلل البروفيل ديالك…","كيتعرف على الأنماط…","كيتحضر الخطة…"],
-  },
-  quiz: {
-    fr:     ["Analyse de tes lacunes…","Calibrage des questions…","Préparation du diagnostic…"],
-    ar:     ["تحليل الثغرات…","معايرة الأسئلة…","تحضير التشخيص…"],
-    darija: ["كيتحلل فين كتبلوك…","كيتحضر التشخيص…","قريبا…"],
-  },
-  plan: {
-    fr:     ["Analyse de ton profil…","Construction du parcours…","Intégration des conseils…","Finalisation du plan…","Dernière touche…"],
-    ar:     ["تحليل ملفك…","بناء المسار…","دمج النصائح…","إنهاء الخطة…","اللمسة الأخيرة…"],
-    darija: ["كيتحلل البروفيل ديالك…","كيتبنى المسار…","كتدخل النصائح…","كيكمل الخطة…","آخر لمسة…"],
-  },
-};
+function getSkeletonMsgs(type, t) {
+  const msgs = {
+    motiv: [t("study.loading"), t("study.psychoAnalyzing"), t("study.loading")],
+    psycho: [t("study.psychoAnalyzing"), t("study.loading"), t("study.loading")],
+    quiz: [t("study.loading"), t("study.quizBasicSub"), t("study.loading")],
+    plan: [t("study.loading"), t("study.profileMsg"), t("study.loading"), t("study.loading"), t("study.loading")],
+  };
+  return msgs[type] || msgs.quiz;
+}
 
 function getProfil(totalH) {
   if (totalH * 60 < 60) return { code: "urgence", accent: "#C0392B" };
@@ -311,21 +103,6 @@ function LoadingScreen({ messages, theme }) {
 }
 
 // ══════════════════════════════════════════
-// LANG SWITCHER
-// ══════════════════════════════════════════
-function LangSwitcher({ lang, setLang, theme }) {
-  return (
-    <div className="ci-lang">
-      {[["fr","FR"],["ar","ع"],["darija","درجة"]].map(([l, label]) => (
-        <button key={l} className={`ci-lang-btn ${lang === l ? "ci-lang-btn--active" : ""}`}
-          style={lang === l ? { color: theme.primary, borderColor: theme.primary } : {}}
-          onClick={() => setLang(l)}>{label}</button>
-      ))}
-    </div>
-  );
-}
-
-// ══════════════════════════════════════════
 // STEP INDICATOR  (now 6 steps)
 // ══════════════════════════════════════════
 function StepIndicator({ step, total, t }) {
@@ -336,7 +113,7 @@ function StepIndicator({ step, total, t }) {
           <div key={i} className={`ci-step-seg ${i < step ? "ci-step-seg--done" : i === step - 1 ? "ci-step-seg--active" : ""}`} />
         ))}
       </div>
-      <span className="ci-steps-label">{t.step} {step} {t.of} {total}</span>
+      <span className="ci-steps-label">{t('study.step')} {step} {t('study.of')} {total}</span>
     </div>
   );
 }
@@ -361,7 +138,7 @@ function PsychoProfileBanner({ profile, t, theme }) {
     <div className="ci-psycho-banner" style={{ borderColor: meta.color, background: theme.soft }}>
       <div className="ci-psycho-emoji">{meta.emoji}</div>
       <div className="ci-psycho-content">
-        <div className="ci-psycho-label" style={{ color: meta.color }}>{t.profileDetected}</div>
+        <div className="ci-psycho-label" style={{ color: meta.color }}>{t('study.profileDetected')}</div>
         <div className="ci-psycho-name">{profile.profil_dominant?.replace(/_/g, " ")}</div>
         {profile.message_personnalise && (
           <p className="ci-psycho-msg">{profile.message_personnalise}</p>
@@ -378,9 +155,9 @@ function ActivityCard({ act, sessionIdx, actIdx, checked, onToggle, t, theme }) 
   const [open, setOpen] = useState(false);
   const key = `${sessionIdx}-${actIdx}`;
   const typeMap = {
-    video:    { icon: "▶", label: t.actVideo,    hue: "#7C5CBF" },
-    exercice: { icon: "✎", label: t.actExercice, hue: "#C07B2A" },
-    chatbot:  { icon: "◈", label: t.actChatbot,  hue: "#1A7F6E" },
+    video:    { icon: "▶", label: t('study.actVideo'),    hue: "#7C5CBF" },
+    exercice: { icon: "✎", label: t('study.actExercice'), hue: "#C07B2A" },
+    chatbot:  { icon: "◈", label: t('study.actChatbot'),  hue: "#1A7F6E" },
   };
   const cfg = typeMap[act.type] || typeMap.video;
   const phaseColors = { "1": "#3B6FD4", "2": "#C07B2A", "3": "#6B4FBB" };
@@ -411,19 +188,19 @@ function ActivityCard({ act, sessionIdx, actIdx, checked, onToggle, t, theme }) 
         <div className="ci-act-details">
           {act.moment && (
             <div className="ci-detail">
-              <span className="ci-detail-key">{t.momentLabel}</span>
+              <span className="ci-detail-key">{t('study.momentLabel')}</span>
               <span className="ci-detail-val">{act.moment}</span>
             </div>
           )}
           {act.pourquoi && (
             <div className="ci-detail">
-              <span className="ci-detail-key">{t.whyLabel}</span>
+              <span className="ci-detail-key">{t('study.whyLabel')}</span>
               <span className="ci-detail-val">{act.pourquoi}</span>
             </div>
           )}
           {act.astuce && (
             <div className="ci-detail ci-detail--highlight">
-              <span className="ci-detail-key">{t.tipLabel}</span>
+              <span className="ci-detail-key">{t('study.tipLabel')}</span>
               <span className="ci-detail-val">{act.astuce}</span>
             </div>
           )}
@@ -468,7 +245,7 @@ function ScoreSummary({ scores, t, theme }) {
   ];
   return (
     <div className="ci-score-summary">
-      <h3 className="ci-score-summary-title">{t.scoreSummaryTitle}</h3>
+      <h3 className="ci-score-summary-title">{t('study.scoreSummaryTitle')}</h3>
       <div className="ci-score-rows">
         {levels.map(({ key, labelKey, icon }) => {
           const s = scores[key];
@@ -480,7 +257,7 @@ function ScoreSummary({ scores, t, theme }) {
           return (
             <div key={key} className="ci-score-row">
               <span className="ci-score-row-icon">{icon}</span>
-              <span className="ci-score-row-label">{t[labelKey]}</span>
+              <span className="ci-score-row-label">{t(`study.${labelKey}`)}</span>
               <div className="ci-score-row-bar">
                 <div className="ci-score-row-fill"
                   style={{ width: `${pct}%`, background: passed ? theme.primary : "#F4A261" }} />
@@ -501,9 +278,9 @@ function ScoreSummary({ scores, t, theme }) {
 // ══════════════════════════════════════════
 function QuizLevelHeader({ level, quizData, t, theme }) {
   const configs = {
-    basic:  { title: t.quizBasicTitle,  sub: t.quizBasicSub,  num: "①", color: "#3B6FD4" },
-    medium: { title: t.quizMediumTitle, sub: t.quizMediumSub, num: "②", color: "#C07B2A" },
-    high:   { title: t.quizHighTitle,   sub: t.quizHighSub,   num: "③", color: "#6B4FBB" },
+    basic:  { title: t('study.quizBasicTitle'),  sub: t('study.quizBasicSub'),  num: "①", color: "#3B6FD4" },
+    medium: { title: t('study.quizMediumTitle'), sub: t('study.quizMediumSub'), num: "②", color: "#C07B2A" },
+    high:   { title: t('study.quizHighTitle'),   sub: t('study.quizHighSub'),   num: "③", color: "#6B4FBB" },
   };
   const cfg = configs[level] || configs.basic;
   return (
@@ -524,9 +301,9 @@ function QuizLevelHeader({ level, quizData, t, theme }) {
 // MAIN COMPONENT
 // ══════════════════════════════════════════
 export default function StudyPlan({ onBack }) {
-  const [lang, setLang] = useState("fr");
-  const t     = T[lang];
-  const isRtl = lang === "ar" || lang === "darija";
+  const { t, i18n } = useTranslation();
+  const lang    = i18n.language === "ar" ? "ar" : i18n.language === "darija" ? "darija" : "fr";
+  const isRtl   = lang === "ar" || lang === "darija";
 
   // ── Screen state machine ──
   // screens: form | loading | motivation | psycho_loading | quiz | quiz_loading | quiz_score | plan
@@ -575,7 +352,7 @@ export default function StudyPlan({ onBack }) {
   const [loading,        setLoading]         = useState(false);
   const [error,          setError]           = useState("");
 
-  const skeletonMsgs = SKELETON_MSGS[skeletonType]?.[lang] || SKELETON_MSGS.quiz.fr;
+  const skeletonMsgs = getSkeletonMsgs(skeletonType, t);
 
   const toggleFacteur = f => setFacteurs(p => p.includes(f) ? p.filter(x => x !== f) : [...p, f]);
   const toggleAct     = k => setCheckedActs(p => ({ ...p, [k]: !p[k] }));
@@ -598,7 +375,7 @@ export default function StudyPlan({ onBack }) {
 
   const handleNext = () => {
     setError("");
-    if (!canNext()) { setError(t.errorComplete); return; }
+    if (!canNext()) { setError(t('study.errorComplete')); return; }
     if (formStep < 4) { setFormStep(s => s + 1); return; }
     handleFormSubmit();
   };
@@ -626,7 +403,7 @@ export default function StudyPlan({ onBack }) {
       setMotivAnswers({});
       setScreen("motivation");
     } catch (err) {
-      setError(t.errorApi + (err.response?.data?.error || err.message));
+      setError(t('study.errorApi') + (err.response?.data?.error || err.message));
       setScreen("form");
     } finally { setLoading(false); }
   };
@@ -671,7 +448,7 @@ export default function StudyPlan({ onBack }) {
       setQuizAnswers({});
       setScreen("quiz");
     } catch (err) {
-      setError(t.errorApi + (err.response?.data?.error || err.message));
+      setError(t('study.errorApi') + (err.response?.data?.error || err.message));
       setScreen("motivation");
     } finally { setLoading(false); }
   };
@@ -707,7 +484,7 @@ export default function StudyPlan({ onBack }) {
           setQuizAnswers({});
           setScreen("quiz");
         } catch (err) {
-          setError(t.errorApi + (err.response?.data?.error || err.message));
+          setError(t('study.errorApi') + (err.response?.data?.error || err.message));
           setScreen("quiz");
         } finally { setLoading(false); }
       } else {
@@ -730,7 +507,7 @@ export default function StudyPlan({ onBack }) {
           setQuizAnswers({});
           setScreen("quiz");
         } catch (err) {
-          setError(t.errorApi + (err.response?.data?.error || err.message));
+          setError(t('study.errorApi') + (err.response?.data?.error || err.message));
           setScreen("quiz");
         } finally { setLoading(false); }
       } else {
@@ -775,7 +552,7 @@ export default function StudyPlan({ onBack }) {
       setPlan(res.data.plan);
       setScreen("plan");
     } catch (err) {
-      setError(t.errorApi + (err.response?.data?.error || err.message));
+      setError(t('study.errorApi') + (err.response?.data?.error || err.message));
       setScreen("quiz_score");
     } finally { setLoading(false); }
   };
@@ -801,12 +578,12 @@ export default function StudyPlan({ onBack }) {
   const globalPct   = globalTotal > 0 ? Math.round((globalScore / globalTotal) * 100) : 0;
   const scoreMsg = s => {
     const pct = globalTotal > 0 ? Math.round((s/globalTotal)*100) : 0;
-    if (pct >= 85) return t.score5;
-    if (pct >= 70) return t.score4;
-    if (pct >= 55) return t.score3;
-    if (pct >= 40) return t.score2;
-    if (pct >= 20) return t.score1;
-    return t.score0;
+    if (pct >= 85) return t('study.score5');
+    if (pct >= 70) return t('study.score4');
+    if (pct >= 55) return t('study.score3');
+    if (pct >= 40) return t('study.score2');
+    if (pct >= 20) return t('study.score1');
+    return t('study.score0');
   };
 
   // ══════════════════════════════════════════
@@ -827,16 +604,13 @@ export default function StudyPlan({ onBack }) {
     return (
       <div className="ci-shell" dir={isRtl ? "rtl" : "ltr"}
         style={{ "--p": activeTheme.primary, "--soft": activeTheme.soft, "--line": activeTheme.line }}>
-        <header className="ci-header">
-          <button className="ci-back" onClick={onBack}>{t.backHome}</button>
-          <LangSwitcher lang={lang} setLang={setLang} theme={activeTheme} />
-        </header>
+        <header className="ci-header">        </header>
 
         <StepIndicator step={5} total={6} t={t} />
 
         <div className="ci-section-head">
-          <h1 className="ci-h1">{t.motivTitle}</h1>
-          <p className="ci-sub">{t.motivSub}</p>
+          <h1 className="ci-h1">{t('study.motivTitle')}</h1>
+          <p className="ci-sub">{t('study.motivSub')}</p>
         </div>
 
         {error && <div className="ci-error">{error}</div>}
@@ -855,7 +629,7 @@ export default function StudyPlan({ onBack }) {
                   <textarea
                     className="ci-motiv-input"
                     rows={3}
-                    placeholder={t.motivPlaceholder}
+                    placeholder={t('study.motivPlaceholder')}
                     value={motivAnswers[q.id] || ""}
                     onChange={e => setMotivAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
                     style={{ borderColor: (motivAnswers[q.id] || "").length > 10 ? activeTheme.primary : undefined }}
@@ -866,13 +640,13 @@ export default function StudyPlan({ onBack }) {
           })}
         </div>
 
-        <div className="ci-motiv-encourage">{t.motivEncourage}</div>
+        <div className="ci-motiv-encourage">{t('study.motivEncourage')}</div>
 
         <div className="ci-footer-action">
           <button className="ci-cta" onClick={handleMotivSubmit}
             disabled={!allAnswered || loading}
             style={{ background: activeTheme.primary, opacity: !allAnswered ? 0.55 : 1 }}>
-            {loading ? t.loading : t.motivNext}
+            {loading ? t('study.loading') : t('study.motivNext')}
           </button>
         </div>
       </div>
@@ -890,10 +664,7 @@ export default function StudyPlan({ onBack }) {
     return (
       <div className="ci-shell" dir={isRtl ? "rtl" : "ltr"}
         style={{ "--p": activeTheme.primary, "--soft": activeTheme.soft, "--line": activeTheme.line }}>
-        <header className="ci-header">
-          <button className="ci-back" onClick={onBack}>{t.backHome}</button>
-          <LangSwitcher lang={lang} setLang={setLang} theme={activeTheme} />
-        </header>
+        <header className="ci-header">        </header>
 
         {/* Level progress pills */}
         <div className="ci-quiz-levels-strip">
@@ -906,7 +677,7 @@ export default function StudyPlan({ onBack }) {
                 className={`ci-level-pill ${done ? "ci-level-pill--done" : active ? "ci-level-pill--active" : "ci-level-pill--locked"}`}
                 style={active ? { borderColor: activeTheme.primary, color: activeTheme.primary } :
                        done   ? { borderColor: "#22C55E", color: "#22C55E" } : {}}>
-                {done ? "✓" : locked ? "🔒" : "●"} {t[lvl]}
+                {done ? "✓" : locked ? "🔒" : "●"} {t(`study.${lvl}`)}
               </div>
             );
           })}
@@ -948,13 +719,13 @@ export default function StudyPlan({ onBack }) {
           ))}
         </div>
 
-        {!allAnswered && <p className="ci-warn">{t.quizWarn}</p>}
+        {!allAnswered && <p className="ci-warn">{t('study.quizWarn')}</p>}
 
         <div className="ci-footer-action">
           <button className="ci-cta" onClick={handleQuizLevelSubmit}
             disabled={!allAnswered || loading}
             style={{ background: activeTheme.primary }}>
-            {loading ? t.loading : t.quizNext}
+            {loading ? t('study.loading') : t('study.quizNext')}
           </button>
         </div>
       </div>
@@ -968,20 +739,17 @@ export default function StudyPlan({ onBack }) {
     return (
       <div className="ci-shell" dir={isRtl ? "rtl" : "ltr"}
         style={{ "--p": activeTheme.primary, "--soft": activeTheme.soft, "--line": activeTheme.line }}>
-        <header className="ci-header">
-          <button className="ci-back" onClick={onBack}>{t.backHome}</button>
-          <LangSwitcher lang={lang} setLang={setLang} theme={activeTheme} />
-        </header>
+        <header className="ci-header">        </header>
 
         <div className="ci-section-head">
-          <h1 className="ci-h1">{t.scoreSummaryTitle}</h1>
+          <h1 className="ci-h1">{t('study.scoreSummaryTitle')}</h1>
           <p className="ci-sub">{fLabel} · {mLabel}</p>
         </div>
 
         {/* Global score arc */}
         <div className="ci-score-card">
           <div className="ci-score-left">
-            <span className="ci-score-label">{t.yourScore}</span>
+            <span className="ci-score-label">{t('study.yourScore')}</span>
             <div className="ci-score-num" style={{ color: activeTheme.primary }}>
               {globalScore}<span className="ci-score-den">/{globalTotal}</span>
             </div>
@@ -1013,7 +781,7 @@ export default function StudyPlan({ onBack }) {
           <button className="ci-cta" onClick={handleGeneratePlan}
             disabled={loading}
             style={{ background: activeTheme.primary }}>
-            {loading ? t.loading : t.generatePlan}
+            {loading ? t('study.loading') : t('study.generatePlan')}
           </button>
         </div>
       </div>
@@ -1027,10 +795,7 @@ export default function StudyPlan({ onBack }) {
     return (
       <div className="ci-shell" dir={isRtl ? "rtl" : "ltr"}
         style={{ "--p": activeTheme.primary, "--soft": activeTheme.soft, "--line": activeTheme.line }}>
-        <header className="ci-header">
-          <button className="ci-back" onClick={onBack}>{t.backHome}</button>
-          <LangSwitcher lang={lang} setLang={setLang} theme={activeTheme} />
-        </header>
+        <header className="ci-header">        </header>
 
         {/* Context strip */}
         <div className="ci-context-strip">
@@ -1066,7 +831,7 @@ export default function StudyPlan({ onBack }) {
         {plan?.phase_depart && (
           <div className="ci-phase-info" style={{ borderColor: activeTheme.line, background: activeTheme.soft }}>
             <span className="ci-phase-label" style={{ color: activeTheme.primary }}>
-              {t.phaseLabel} →
+              {t('study.phaseLabel')} →
             </span>
             <span className="ci-phase-val">{plan.phase_depart}</span>
           </div>
@@ -1080,8 +845,8 @@ export default function StudyPlan({ onBack }) {
 
         {/* Plan header */}
         <div className="ci-plan-head">
-          <h2 className="ci-h2">{t.planTitle}</h2>
-          <span className="ci-plan-meta">{plan?.duree_totale} · {plan?.temps_par_semaine} {t.weeklyTime}</span>
+          <h2 className="ci-h2">{t('study.planTitle')}</h2>
+          <span className="ci-plan-meta">{plan?.duree_totale} · {plan?.temps_par_semaine} {t('study.weeklyTime')}</span>
         </div>
 
         {/* Sessions */}
@@ -1097,9 +862,9 @@ export default function StudyPlan({ onBack }) {
               <div className="ci-session-body">
                 <div className="ci-session-head">
                   <span className="ci-session-week" style={{ color: activeTheme.primary }}>
-                    {t.weekLabel} {session.semaine}
+                    {t('study.weekLabel')} {session.semaine}
                     {session.phase && (
-                      <span className="ci-session-phase-tag">· {t.phaseLabel} {session.phase}</span>
+                      <span className="ci-session-phase-tag">· {t('study.phaseLabel')} {session.phase}</span>
                     )}
                   </span>
                   <h3 className="ci-session-obj">{session.objectif}</h3>
@@ -1122,7 +887,7 @@ export default function StudyPlan({ onBack }) {
         {/* Conseils */}
         {plan?.conseils_finaux && (
           <div className="ci-advice">
-            <h3 className="ci-advice-title">💡 {t.finalAdvice}</h3>
+            <h3 className="ci-advice-title">💡 {t('study.finalAdvice')}</h3>
             <ul className="ci-advice-list">
               {plan.conseils_finaux.map((c, i) => (
                 <li key={i}>
@@ -1148,9 +913,7 @@ export default function StudyPlan({ onBack }) {
         {error && <div className="ci-error">{error}</div>}
 
         <div className="ci-plan-actions">
-          <button className="ci-btn-ghost" onClick={handleReset}>↺ {t.newPlan}</button>
-          <button className="ci-back" onClick={onBack}>{t.backHome}</button>
-        </div>
+          <button className="ci-btn-ghost" onClick={handleReset}>↺ {t('study.newPlan')}</button>        </div>
       </div>
     );
   }
@@ -1161,17 +924,9 @@ export default function StudyPlan({ onBack }) {
   return (
     <div className="ci-shell ci-shell--form" dir={isRtl ? "rtl" : "ltr"}
       style={{ "--p": theme.primary, "--soft": theme.soft, "--line": theme.line }}>
-      <header className="ci-header">
-        <button className="ci-back" onClick={onBack}>{t.backHome}</button>
-        <LangSwitcher lang={lang} setLang={setLang} theme={theme} />
-      </header>
+      <header className="ci-header">      </header>
 
-      {/* Hero */}
-      <div className="ci-hero">
-        <div className="ci-wordmark">iq<span style={{ color: theme.primary }}>ra</span></div>
-        <h1 className="ci-hero-title">{t.title}</h1>
-        <p className="ci-hero-sub">{t.subtitle}</p>
-      </div>
+      {/* Hero supprimé — PageShell affiche déjà le titre */}
 
       <StepIndicator step={formStep} total={4} t={t} />
 
@@ -1181,7 +936,7 @@ export default function StudyPlan({ onBack }) {
       {formStep === 1 && (
         <div className="ci-form-step">
           <div className="ci-field-group">
-            <label className="ci-label">{t.q1}</label>
+            <label className="ci-label">{t('study.q1')}</label>
             <div className="ci-select-wrap">
               <select className="ci-select" value={filiereValue}
                 onChange={e => handleFiliereChange(e.target.value)}>
@@ -1192,7 +947,7 @@ export default function StudyPlan({ onBack }) {
           </div>
           {filiereValue && (
             <div className="ci-field-group ci-field-group--anim">
-              <label className="ci-label">{t.q2}</label>
+              <label className="ci-label">{t('study.q2')}</label>
               <div className="ci-pill-group">
                 {matieresDispo.map(m => (
                   <button key={m.value}
@@ -1207,13 +962,13 @@ export default function StudyPlan({ onBack }) {
           )}
           {matiere && (
             <div className="ci-field-group ci-field-group--anim">
-              <label className="ci-label">{t.q3}</label>
-              <input className="ci-input" type="text" placeholder={t.chapPlaceholder}
+              <label className="ci-label">{t('study.q3')}</label>
+              <input className="ci-input" type="text" placeholder={t('study.chapPlaceholder')}
                 value={chapitres} onChange={e => setChapitres(e.target.value)} />
-              <span className="ci-field-hint">{t.chapHint}</span>
+              <span className="ci-field-hint">{t('study.chapHint')}</span>
               {chapSuggestions.length > 0 && (
                 <div className="ci-suggestions">
-                  <span className="ci-suggestions-label">{t.chapSuggest}</span>
+                  <span className="ci-suggestions-label">{t('study.chapSuggest')}</span>
                   <div className="ci-suggestion-chips">
                     {chapSuggestions.map(s => (
                       <button key={s} className="ci-chip" onClick={() => addSuggestion(s)}>+ {s}</button>
@@ -1229,12 +984,12 @@ export default function StudyPlan({ onBack }) {
       {/* ── Step 2 ── */}
       {formStep === 2 && (
         <div className="ci-form-step">
-          <p className="ci-field-sub">{t.moreInfo}</p>
+          <p className="ci-field-sub">{t('study.moreInfo')}</p>
           <div className="ci-time-grid">
             {[
-              { label: t.weeksLabel,    val: semaines,      set: setSemaines,      opts: [1,2,3,4],        fmt: v => `${v} sem.` },
-              { label: t.daysLabel,     val: joursParSem,   set: setJoursParSem,   opts: [1,2,3,4,5,6,7],  fmt: v => `${v} j` },
-              { label: t.hoursLabel,    val: heuresParJour, set: setHeuresParJour, opts: [1,2,3,4,5,6,7,8],fmt: v => `${v} h` },
+              { label: t('study.weeksLabel'),    val: semaines,      set: setSemaines,      opts: [1,2,3,4],        fmt: v => `${v} sem.` },
+              { label: t('study.daysLabel'),     val: joursParSem,   set: setJoursParSem,   opts: [1,2,3,4,5,6,7],  fmt: v => `${v} j` },
+              { label: t('study.hoursLabel'),    val: heuresParJour, set: setHeuresParJour, opts: [1,2,3,4,5,6,7,8],fmt: v => `${v} h` },
             ].map(({ label, val, set, opts, fmt }) => (
               <div key={label} className="ci-time-block">
                 <span className="ci-time-label">{label}</span>
@@ -1255,7 +1010,7 @@ export default function StudyPlan({ onBack }) {
             <div className="ci-time-result">
               <div className="ci-time-result-num" style={{ color: theme.primary }}>{total}h</div>
               <div className="ci-time-result-text">
-                {total < 5 ? t.totalWarn : t.totalOk}
+                {total < 5 ? t('study.totalWarn') : t('study.totalOk')}
               </div>
             </div>
           )}
@@ -1265,13 +1020,13 @@ export default function StudyPlan({ onBack }) {
       {/* ── Step 3 ── */}
       {formStep === 3 && (
         <div className="ci-form-step">
-          <p className="ci-field-sub">{t.bloc3Sub}</p>
+          <p className="ci-field-sub">{t('study.bloc3Sub')}</p>
           <div className="ci-level-cards">
             {[
-              { value: "niveau0", label: t.niveau0, sub: t.niveau0sub, n: "0" },
-              { value: "niveau1", label: t.niveau1, sub: t.niveau1sub, n: "1" },
-              { value: "niveau2", label: t.niveau2, sub: t.niveau2sub, n: "2" },
-              { value: "niveau3", label: t.niveau3, sub: t.niveau3sub, n: "3" },
+              { value: "niveau0", label: t('study.niveau0'), sub: t('study.niveau0sub'), n: "0" },
+              { value: "niveau1", label: t('study.niveau1'), sub: t('study.niveau1sub'), n: "1" },
+              { value: "niveau2", label: t('study.niveau2'), sub: t('study.niveau2sub'), n: "2" },
+              { value: "niveau3", label: t('study.niveau3'), sub: t('study.niveau3sub'), n: "3" },
             ].map(opt => (
               <div key={opt.value}
                 className={`ci-level-card ${niveauAuto === opt.value ? "ci-level-card--sel" : ""}`}
@@ -1295,14 +1050,14 @@ export default function StudyPlan({ onBack }) {
       {/* ── Step 4 ── */}
       {formStep === 4 && (
         <div className="ci-form-step">
-          <p className="ci-field-sub">{t.bloc4Sub}</p>
+          <p className="ci-field-sub">{t('study.bloc4Sub')}</p>
           <div className="ci-obstacle-list">
             {[
-              { value: "procrastination", label: t.proc,    sub: t.procSub,    glyph: "⏱" },
-              { value: "reseaux",         label: t.reseaux,  sub: t.reseauxSub, glyph: "📵" },
-              { value: "panique",         label: t.panique,  sub: t.paniqueSub, glyph: "🫧" },
-              { value: "motivation",      label: t.motiv,    sub: t.motivSub,   glyph: "🔋" },
-              { value: "rien",            label: t.rien,     sub: t.rienSub,    glyph: "✓" },
+              { value: "procrastination", label: t('study.proc'),    sub: t('study.procSub'),    glyph: "⏱" },
+              { value: "reseaux",         label: t('study.reseaux'),  sub: t('study.reseauxSub'), glyph: "📵" },
+              { value: "panique",         label: t('study.panique'),  sub: t('study.paniqueSub'), glyph: "🫧" },
+              { value: "motivation",      label: t('study.motiv'),    sub: t('study.motivSub'),   glyph: "🔋" },
+              { value: "rien",            label: t('study.rien'),     sub: t('study.rienSub'),    glyph: "✓" },
             ].map(f => {
               const sel = facteurs.includes(f.value);
               const fth = getTheme([f.value]);
@@ -1332,12 +1087,12 @@ export default function StudyPlan({ onBack }) {
         {formStep > 1 && (
           <button className="ci-btn-ghost"
             onClick={() => { setError(""); setFormStep(s => s - 1); }}>
-            ← {t.back}
+            ← {t('study.back')}
           </button>
         )}
         <button className="ci-cta" onClick={handleNext} disabled={loading}
           style={{ background: theme.primary }}>
-          {loading ? t.loading : formStep < 4 ? t.next : t.startChallenge}
+          {loading ? t('study.loading') : formStep < 4 ? t('study.next') : t('study.startChallenge')}
         </button>
       </div>
     </div>

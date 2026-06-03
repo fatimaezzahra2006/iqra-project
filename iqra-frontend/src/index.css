@@ -1,15 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Satoshi:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,500;1,700;1,900&display=swap");
+/* ── Fonts ──────────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,600;1,700&family=Cairo:wght@300;400;500;600;700;800;900&display=swap");
 
 body {
   margin: 0;
   line-height: normal;
   background-color: #f3f3f3;
-  font-family: 'Satoshi', sans-serif;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Arabic / RTL — Cairo sur tout l'arbre */
+html[dir="rtl"],
+html[dir="rtl"] body,
+html[dir="rtl"] * {
+  font-family: 'Cairo', sans-serif !important;
 }
 
 * { box-sizing: border-box; }
 
 :root {
+  --font-latin:  'Poppins', sans-serif;
+  --font-arabic: 'Cairo', sans-serif;
+
   --color-black: #000;
   --color-darkgray-100: #acacac;
   --color-darkgray-200: #989898;
@@ -55,3 +66,45 @@ body {
   --shadow-drop: 0px 6px 13.9px rgba(0,0,0,0.1);
   --shadow-drop-1: 0px 13px 56.8px #8e55a1;
 }
+
+/* ── Arabic / RTL — already handled globally above ─────── */
+
+/* Navbar RTL */
+[dir="rtl"] .navbar-container     { flex-direction: row-reverse; }
+[dir="rtl"] .navbar-links         { flex-direction: row-reverse; }
+[dir="rtl"] .navbar-buttons       { flex-direction: row-reverse; }
+[dir="rtl"] .dropdown-header      { flex-direction: row-reverse; }
+[dir="rtl"] .dropdown-header-info { text-align: right; }
+[dir="rtl"] .dropdown-item        { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .lang-menu            { right: auto; left: 0; }
+
+/* Auth RTL */
+[dir="rtl"] .auth-card            { flex-direction: row-reverse; }
+[dir="rtl"] .auth-form-panel      { text-align: right; }
+[dir="rtl"] .auth-form label      { text-align: right; }
+[dir="rtl"] .auth-form .input-wrap { flex-direction: row-reverse; }
+[dir="rtl"] .auth-form .input-icon { padding: 0 12px 0 0; }
+[dir="rtl"] .auth-form input      { padding: 11px 0 11px 14px; text-align: right; }
+[dir="rtl"] .auth-footer          { direction: rtl; }
+
+/* Profile RTL */
+[dir="rtl"] .pf-header-card       { flex-direction: row-reverse; }
+[dir="rtl"] .pf-section-header    { flex-direction: row-reverse; }
+[dir="rtl"] .pf-field             { align-items: flex-end; }
+[dir="rtl"] .pf-actions-row       { flex-direction: row-reverse; }
+[dir="rtl"] .pf-edit-actions      { flex-direction: row-reverse; }
+[dir="rtl"] .pf-btn-edit,
+[dir="rtl"] .pf-btn-save,
+[dir="rtl"] .pf-btn-cancel,
+[dir="rtl"] .pf-action-btn        { flex-direction: row-reverse; }
+
+/* Smart home RTL */
+[dir="rtl"] .smart-home__card      { flex-direction: row-reverse; }
+[dir="rtl"] .smart-home__hero      { direction: rtl; }
+[dir="rtl"] .smart-home__card-body { text-align: right; }
+[dir="rtl"] .smart-home__card-arrow { transform: scaleX(-1); }
+
+/* Verify RTL */
+[dir="rtl"] .verify-card           { direction: rtl; }
+[dir="rtl"] .verify-subtitle       { direction: rtl; }
+[dir="rtl"] .code-inputs           { direction: ltr; }

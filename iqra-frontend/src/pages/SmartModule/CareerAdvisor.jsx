@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -370,9 +371,7 @@ const SCREEN = {
   PORTAL_PSYCHO: "portal_psycho",
 };
 
-export default function CareerAdvisor() {
-  const [lang,        setLang]       = useState("fr");
-  const [screen,      setScreen]     = useState(SCREEN.AMORCE);
+export default function CareerAdvisor() {  const [screen,      setScreen]     = useState(SCREEN.AMORCE);
   const [amorce,      setAmorce]     = useState({ niveau: "", filiere: "", description: "" });
   const [questions,   setQuestions]  = useState([]);
   const [reponses,    setReponses]   = useState({});
@@ -384,12 +383,11 @@ export default function CareerAdvisor() {
   const [suggLoading, setSuggLoading] = useState(false);
 
   const suggTimerRef = useRef(null);
-  const topRef       = useRef(null);
-
-  const t     = T[lang];
-  const isRTL = lang === "ar" || lang === "darija";
+  const topRef       = useRef(null);  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar" || i18n.language === "darija";
 
   useEffect(() => {
+    if (screen === SCREEN.AMORCE) return;
     topRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [screen]);
 
@@ -403,7 +401,7 @@ export default function CareerAdvisor() {
 
   // ── Amorce submit ─────────────────────────────────────────────
   const handleAmorceSubmit = async () => {
-    if (!amorce.niveau) { setError(t.errLevel); return; }
+    if (!amorce.niveau) { setError(t('career.errLevel')); return; }
     setError("");
     setScreen(SCREEN.LOADING_Q);
     try {
@@ -411,7 +409,7 @@ export default function CareerAdvisor() {
         niveau:      amorce.niveau,
         filiere:     amorce.filiere,
         description: amorce.description,
-        language:    lang,
+        language: i18n.language,
       });
       const qs = res.data.questions || [];
       if (qs.length < 1) throw new Error("Pas assez de questions");
@@ -421,7 +419,7 @@ export default function CareerAdvisor() {
       setReponses({});
       setScreen(SCREEN.QUESTIONNAIRE);
     } catch {
-      setError(t.errQuestions);
+      setError(t('career.errQuestions'));
       setScreen(SCREEN.AMORCE);
     }
   };
@@ -447,7 +445,7 @@ export default function CareerAdvisor() {
         question_text:  q.texte,
         current_answer: currentAnswer || "",
         niveau:         amorce.niveau,
-        language:       lang,
+        language: i18n.language,
       });
       setSuggestion(res.data.suggestion || "");
     } catch {
@@ -481,7 +479,7 @@ export default function CareerAdvisor() {
   // ── Navigation questionnaire ──────────────────────────────────
   const handleNext = () => {
     const q = questions[currentQ];
-    if (!reponses[q.id]?.trim()) { setError(t.errWrite); return; }
+    if (!reponses[q.id]?.trim()) { setError(t('career.errWrite')); return; }
     setError("");
     setShowTags(false);
     setSuggestion("");
@@ -511,12 +509,12 @@ export default function CareerAdvisor() {
       const res = await axios.post(`${API_BASE}/orientation/`, {
         contexte_amorce: amorce,
         reponses:        reponsesArray,
-        language:        lang,
+        language: i18n.language,
       });
       setResultats(res.data);
       setScreen(SCREEN.DASHBOARD);
     } catch {
-      setError(t.errAnalyse);
+      setError(t('career.errAnalyse'));
       setScreen(SCREEN.QUESTIONNAIRE);
     }
   };
@@ -534,21 +532,7 @@ export default function CareerAdvisor() {
   // SOUS-COMPOSANTS DE RENDU
   // ════════════════════════════════════════════════════════════
 
-  const LanguageSwitcher = () => (
-    <div className={styles.langSwitcher}>
-      {LANGUAGES.map((l) => (
-        <button
-          key={l.code}
-          className={`${styles.langBtn} ${lang === l.code ? styles.langBtnActive : ""}`}
-          onClick={() => setLang(l.code)}
-          title={l.full}
-        >
-          {l.label}
-        </button>
-      ))}
-    </div>
-  );
-
+  
   // ════════════════════════════════════════════════════════════
   // ÉCRANS
   // ════════════════════════════════════════════════════════════
@@ -557,45 +541,38 @@ export default function CareerAdvisor() {
   if (screen === SCREEN.AMORCE) return (
     <AnimatePresence mode="wait">
       <motion.div key="amorce" {...fadeIn} className={styles.container}
-        dir={isRTL ? "rtl" : "ltr"} ref={topRef}>
-        <LanguageSwitcher />
-        <div className={styles.header}>
-          <span className={styles.icon}>🧭</span>
-          <h2>{t.title}</h2>
-          <p className={styles.subtitle}>{t.subtitle}</p>
-        </div>
-        <div className={styles.card}>
-          <h3>{t.startCard}</h3>
+        dir={isRTL ? "rtl" : "ltr"} ref={topRef}>        <div className={styles.card}>
+          <h3>{t('career.startCard')}</h3>
 
           <div className={styles.formGroup}>
-            <label>{t.levelLabel}</label>
+            <label>{t('career.levelLabel')}</label>
             <select
               value={amorce.niveau}
               onChange={(e) => setAmorce({ ...amorce, niveau: e.target.value, filiere: "" })}
             >
-              <option value="">{t.levelPlaceholder}</option>
+              <option value="">{t('career.levelPlaceholder')}</option>
               {NIVEAUX.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
           </div>
 
           {FILIERES_BAC[amorce.niveau] && (
             <div className={styles.formGroup}>
-              <label>{t.filiereLabel}</label>
+              <label>{t('career.filiereLabel')}</label>
               <select
                 value={amorce.filiere}
                 onChange={(e) => setAmorce({ ...amorce, filiere: e.target.value })}
               >
-                <option value="">{t.filierePlaceholder}</option>
+                <option value="">{t('career.filierePlaceholder')}</option>
                 {FILIERES_BAC[amorce.niveau].map((f) => <option key={f} value={f}>{f}</option>)}
               </select>
             </div>
           )}
 
           <div className={styles.formGroup}>
-            <label>{t.descLabel}</label>
+            <label>{t('career.descLabel')}</label>
             <textarea
               rows={4}
-              placeholder={t.descPlaceholder}
+              placeholder={t('career.descPlaceholder')}
               value={amorce.description}
               maxLength={500}
               onChange={(e) => setAmorce({ ...amorce, description: e.target.value })}
@@ -605,7 +582,7 @@ export default function CareerAdvisor() {
 
           {error && <p className={styles.error}>{error}</p>}
           <button className={styles.btnPrimary} onClick={handleAmorceSubmit}>
-            {t.startBtn}
+            {t('career.startBtn')}
           </button>
         </div>
       </motion.div>
@@ -617,8 +594,8 @@ export default function CareerAdvisor() {
     <motion.div key="lq" {...fadeIn} className={styles.container} dir={isRTL ? "rtl" : "ltr"}>
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        <h3>{t.loadingQ}</h3>
-        <p>{t.loadingQSub}</p>
+        <h3>{t('career.loadingQ')}</h3>
+        <p>{t('career.loadingQSub')}</p>
       </div>
     </motion.div>
   );
@@ -627,16 +604,14 @@ export default function CareerAdvisor() {
   if (screen === SCREEN.QUESTIONNAIRE && questions.length > 0) {
     const q        = questions[currentQ];
     const pct      = Math.round(((currentQ + 1) / questions.length) * 100);
-    const encourage = t.encouragements[currentQ + 1];
+    const encourage = t('career.encouragements')[currentQ + 1];
     // Les tags sont directement dans q.tags — déjà prêts, zéro latence
     const currentTags = q.tags || [];
 
     return (
       <AnimatePresence mode="wait">
         <motion.div key={`q-${currentQ}`} {...fadeIn} className={styles.container}
-          dir={isRTL ? "rtl" : "ltr"} ref={topRef}>
-          <LanguageSwitcher />
-          <div className={styles.header}><h2>{t.questionTitle}</h2></div>
+          dir={isRTL ? "rtl" : "ltr"} ref={topRef}>          <div className={styles.header}><h2>{t('career.questionTitle')}</h2></div>
 
           {/* Barre de progression */}
           <div className={styles.progressWrapper}>
@@ -655,7 +630,7 @@ export default function CareerAdvisor() {
 
             <textarea
               rows={5}
-              placeholder={t.answerHere}
+              placeholder={t('career.answerHere')}
               value={reponses[q.id] || ""}
               onChange={(e) => handleReponseChange(q.id, e.target.value)}
             />
@@ -675,7 +650,7 @@ export default function CareerAdvisor() {
                     <>
                       <span className={styles.suggestionText}>💡 {suggestion}</span>
                       <button className={styles.tag} onClick={applySuggestion}>
-                        {t.addSuggestion}
+                        {t('career.addSuggestion')}
                       </button>
                     </>
                   )}
@@ -687,7 +662,7 @@ export default function CareerAdvisor() {
             {/* Affiché uniquement si la question a des tags */}
             {currentTags.length > 0 && (
               <button className={styles.helpBtn} onClick={handleHelpClick}>
-                {t.helpBtn}
+                {t('career.helpBtn')}
               </button>
             )}
 
@@ -713,9 +688,9 @@ export default function CareerAdvisor() {
           </div>
 
           <div className={styles.navBtns}>
-            <button className={styles.btnSecondary} onClick={handleBack}>{t.back}</button>
+            <button className={styles.btnSecondary} onClick={handleBack}>{t('career.back')}</button>
             <button className={styles.btnPrimary} onClick={handleNext}>
-              {currentQ < questions.length - 1 ? t.next : t.finish}
+              {currentQ < questions.length - 1 ? t('career.next') : t('career.finish')}
             </button>
           </div>
         </motion.div>
@@ -728,8 +703,8 @@ export default function CareerAdvisor() {
     <motion.div key="la" {...fadeIn} className={styles.container} dir={isRTL ? "rtl" : "ltr"}>
       <div className={styles.loading}>
         <div className={styles.spinner} />
-        <h3>{t.loadingA}</h3>
-        <p>{t.loadingASub}</p>
+        <h3>{t('career.loadingA')}</h3>
+        <p>{t('career.loadingASub')}</p>
       </div>
     </motion.div>
   );
@@ -743,7 +718,7 @@ export default function CareerAdvisor() {
           dir={isRTL ? "rtl" : "ltr"} ref={topRef}>
           <div className={styles.header}>
             <span className={styles.icon}>🌟</span>
-            <h2>{t.resultTitle}</h2>
+            <h2>{t('career.resultTitle')}</h2>
           </div>
 
           {message_intro && (
@@ -760,15 +735,15 @@ export default function CareerAdvisor() {
           <div className={styles.portalsGrid}>
             {[
               {
-                title:  t.portal1Title,
-                sub:    t.portal1Sub,
+                title:  t('career.portal1Title'),
+                sub:    t('career.portal1Sub'),
                 icon:   "🗺️",
                 screen: SCREEN.PORTAL_CAREER,
                 color:  "#7B2FBE",
               },
               {
-                title:  t.portal2Title,
-                sub:    t.portal2Sub,
+                title:  t('career.portal2Title'),
+                sub:    t('career.portal2Sub'),
                 icon:   "🪞",
                 screen: SCREEN.PORTAL_PSYCHO,
                 color:  "#F5A623",
@@ -794,7 +769,7 @@ export default function CareerAdvisor() {
           </div>
 
           <button className={styles.btnSecondary} onClick={handleRestart}>
-            {t.restart}
+            {t('career.restart')}
           </button>
         </motion.div>
       </AnimatePresence>
@@ -810,24 +785,24 @@ export default function CareerAdvisor() {
         <motion.div key="career" {...fadeIn} className={styles.container}
           dir={isRTL ? "rtl" : "ltr"} ref={topRef}>
           <button className={styles.backLink} onClick={() => setScreen(SCREEN.DASHBOARD)}>
-            {t.backDashboard}
+            {t('career.backDashboard')}
           </button>
           <div className={styles.header}>
             <span className={styles.icon}>🗺️</span>
-            <h2>{t.portal1Title}</h2>
+            <h2>{t('career.portal1Title')}</h2>
           </div>
 
           {Object.keys(scores_radar).length >= 3 && (
             <div className={styles.section}>
-              <h3>{t.radarTitle}</h3>
-              <p className={styles.chartSub}>{t.radarSub}</p>
+              <h3>{t('career.radarTitle')}</h3>
+              <p className={styles.chartSub}>{t('career.radarSub')}</p>
               <RadarFilieres scores_radar={scores_radar} />
             </div>
           )}
 
           {top_filieres.length > 0 && (
             <div className={styles.section}>
-              <h3>{t.top3Title}</h3>
+              <h3>{t('career.top3Title')}</h3>
               {top_filieres.map((f, i) => (
                 <motion.div
                   key={i}
@@ -852,19 +827,19 @@ export default function CareerAdvisor() {
                   </div>
 
                   {f.pourquoi && (
-                    <p><strong>{t.pourquoi}</strong> {f.pourquoi}</p>
+                    <p><strong>{t('career.pourquoi')}</strong> {f.pourquoi}</p>
                   )}
                   {f.realites_maroc && (
-                    <p><strong>{t.realites}</strong> {f.realites_maroc}</p>
+                    <p><strong>{t('career.realites')}</strong> {f.realites_maroc}</p>
                   )}
                   {f.parcours_detaille && (
                     <div className={styles.parcours}>
-                      <p className={styles.parcoursTitle}>{t.parcoursTitle}</p>
+                      <p className={styles.parcoursTitle}>{t('career.parcoursTitle')}</p>
                       <p>{f.parcours_detaille}</p>
                     </div>
                   )}
                   {f.defi_personnel && (
-                    <p><strong>{t.defi}</strong> {f.defi_personnel}</p>
+                    <p><strong>{t('career.defi')}</strong> {f.defi_personnel}</p>
                   )}
                 </motion.div>
               ))}
@@ -890,17 +865,17 @@ export default function CareerAdvisor() {
         <motion.div key="psycho" {...fadeIn} className={styles.container}
           dir={isRTL ? "rtl" : "ltr"} ref={topRef}>
           <button className={styles.backLink} onClick={() => setScreen(SCREEN.DASHBOARD)}>
-            {t.backDashboard}
+            {t('career.backDashboard')}
           </button>
           <div className={styles.header}>
             <span className={styles.icon}>🪞</span>
-            <h2>{t.portal2Title}</h2>
+            <h2>{t('career.portal2Title')}</h2>
           </div>
 
           {Object.keys(dimensions_psycho).length >= 2 && (
             <div className={styles.section}>
-              <h3>{t.barTitle}</h3>
-              <p className={styles.chartSub}>{t.barSub}</p>
+              <h3>{t('career.barTitle')}</h3>
+              <p className={styles.chartSub}>{t('career.barSub')}</p>
               <BarresDimensions dimensions_psycho={dimensions_psycho} />
             </div>
           )}
@@ -912,7 +887,7 @@ export default function CareerAdvisor() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h4>{t.forcesTitle}</h4>
+              <h4>{t('career.forcesTitle')}</h4>
               <ul>{forces_cachees.map((f, i) => <li key={i}>{f}</li>)}</ul>
             </motion.div>
           )}
@@ -924,7 +899,7 @@ export default function CareerAdvisor() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
             >
-              <h4>{t.croyancesTitle}</h4>
+              <h4>{t('career.croyancesTitle')}</h4>
               <ul>{croyances_limitantes.map((c, i) => <li key={i}>{c}</li>)}</ul>
             </motion.div>
           )}
@@ -936,7 +911,7 @@ export default function CareerAdvisor() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <h4>{t.styleTitle}</h4>
+              <h4>{t('career.styleTitle')}</h4>
               <p>{style_apprentissage}</p>
             </motion.div>
           )}

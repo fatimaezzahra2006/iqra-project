@@ -1,0 +1,135 @@
+.smart-home {
+  font-family: 'Satoshi', Georgia, serif;
+  background: linear-gradient(135deg, #f8f4fb 0%, #f0eaf7 100%);
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.smart-home__inner {
+  width: 100%;
+  max-width: 680px;
+}
+
+/* Hero */
+.smart-home__hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.smart-home__badge {
+  display: inline-block;
+  background: rgba(142, 85, 161, 0.1);
+  color: #8e55a1;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 16px;
+  border-radius: 200px;
+  margin-bottom: 16px;
+}
+
+.smart-home__title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #191a23;
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+
+.smart-home__title span {
+  color: #8e55a1;
+}
+
+.smart-home__sub {
+  font-size: 16px;
+  color: #999;
+  margin: 0;
+}
+
+/* Cards */
+.smart-home__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.smart-home__card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  border: 1.5px solid #f0eaf7;
+  box-shadow: 0 4px 16px rgba(142, 85, 161, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  text-align: left;
+}
+
+.smart-home__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(142, 85, 161, 0.14);
+  border-color: #d4b8e0;
+}
+
+.smart-home__card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.smart-home__card-icon--study  { background: linear-gradient(135deg, #e8d5f5, #d4b8e0); }
+.smart-home__card-icon--gap    { background: linear-gradient(135deg, #d5e8f5, #b8d4e0); }
+.smart-home__card-icon--career { background: linear-gradient(135deg, #f5e8d5, #e0d4b8); }
+
+.smart-home__card-body {
+  flex: 1;
+}
+
+.smart-home__card-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #191a23;
+  margin: 0 0 4px;
+}
+
+.smart-home__card-desc {
+  font-size: 13px;
+  color: #aaa;
+  margin: 0;
+}
+
+.smart-home__card-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f5f0f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8e55a1;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.smart-home__card:hover .smart-home__card-arrow {
+  background: #8e55a1;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .smart-home__title { font-size: 26px; }
+  .smart-home__card  { padding: 18px 20px; gap: 14px; }
+  .smart-home__card-icon { width: 46px; height: 46px; font-size: 22px; }
+}

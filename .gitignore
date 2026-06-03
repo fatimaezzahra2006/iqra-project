@@ -2,6 +2,10 @@
 __pycache__/
 *.pyc
 
+# Environment secrets — never commit
+.env
+*.env
+
 # ChromaDB
 ai_engine/chroma_storage/
 

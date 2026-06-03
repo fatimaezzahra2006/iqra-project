@@ -1,7 +1,5 @@
-// src/pages/SmartModule/VisualLearning.jsx
-// Version 2 — Une vidéo par étape, navigation étape suivante
-
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import "./VisualLearning.css";
 
@@ -20,16 +18,6 @@ const MATIERES = [
   "Comptabilité","Informatique","Autre",
 ];
 
-const LANGUAGES = [
-  { value: "fr", label: "Français" },
-  { value: "ar", label: "العربية" },
-  { value: "darija", label: "الدارجة" },
-];
-
-// ══════════════════════════════════════════
-// SOUS-COMPOSANTS
-// ══════════════════════════════════════════
-
 function StepBadge({ step, label, active, done }) {
   return (
     <div className={`vl-step-badge ${active ? "active" : ""} ${done ? "done" : ""}`}>
@@ -42,6 +30,7 @@ function StepBadge({ step, label, active, done }) {
 }
 
 function ImageUploadZone({ image, onImageChange, onImageRemove }) {
+  const { t } = useTranslation();
   const fileInputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
 
@@ -76,8 +65,8 @@ function ImageUploadZone({ image, onImageChange, onImageRemove }) {
       ) : (
         <div className="vl-upload-placeholder">
           <div className="vl-upload-icon">📷</div>
-          <p>Glisse une photo d'exercice ici</p>
-          <span>ou clique pour choisir</span>
+          <p>{t('visual.uploadHint')}</p>
+          <span>{t('visual.uploadOr')}</span>
         </div>
       )}
     </div>
@@ -85,20 +74,16 @@ function ImageUploadZone({ image, onImageChange, onImageRemove }) {
 }
 
 function LoadingScreen() {
+  const { t } = useTranslation();
   const messages = [
-    "Analyse de ta question…",
-    "Recherche dans les cours IQRA…",
-    "Génération des explications…",
-    "Création des animations Manim…",
-    "Rendu des vidéos en cours…",
+    t('visual.loading1'), t('visual.loading2'), t('visual.loading3'),
+    t('visual.loading4'), t('visual.loading5'),
   ];
   const [idx, setIdx] = useState(0);
-
   useEffect(() => {
     const id = setInterval(() => setIdx(i => (i + 1) % messages.length), 2800);
     return () => clearInterval(id);
   }, []);
-
   return (
     <div className="vl-loading">
       <div className="vl-loading-orbs">
@@ -107,24 +92,18 @@ function LoadingScreen() {
         <div className="vl-orb vl-orb-3" />
       </div>
       <p className="vl-loading-msg">{messages[idx]}</p>
-      <span className="vl-loading-sub">
-        Chaque étape génère sa propre animation — cela peut prendre 30–60 secondes
-      </span>
+      <span className="vl-loading-sub">{t('visual.loadingSub')}</span>
     </div>
   );
 }
 
-// ══════════════════════════════════════════
-// COMPOSANT ÉTAPES — cœur de la v2
-// ══════════════════════════════════════════
-
 function EtapesPlayer({ etapes, notion }) {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const videoRef = useRef(null);
   const etape = etapes[current];
   const total = etapes.length;
 
-  // Recharge la vidéo quand l'étape change
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.load();
@@ -137,26 +116,18 @@ function EtapesPlayer({ etapes, notion }) {
 
   return (
     <div className="vl-etapes-player">
-
-      {/* Barre de progression des étapes */}
       <div className="vl-etapes-nav">
         {etapes.map((e, i) => (
-          <button
-            key={i}
+          <button key={i}
             className={`vl-etape-dot ${i === current ? "active" : ""} ${i < current ? "done" : ""}`}
-            onClick={() => setCurrent(i)}
-            title={e.titre}
-          >
+            onClick={() => setCurrent(i)} title={e.titre}>
             <span className="vl-etape-dot-num">{i + 1}</span>
             <span className="vl-etape-dot-label">{e.titre}</span>
           </button>
         ))}
       </div>
 
-      {/* Contenu de l'étape courante */}
       <div className="vl-etape-content">
-
-        {/* En-tête étape */}
         <div className="vl-etape-header">
           <div className="vl-etape-badge">
             <span className="vl-etape-num-big">{current + 1}</span>
@@ -165,205 +136,135 @@ function EtapesPlayer({ etapes, notion }) {
           <h3 className="vl-etape-titre">{etape.titre}</h3>
         </div>
 
-        {/* Grid : vidéo + explication */}
         <div className="vl-etape-grid">
-
-          {/* Vidéo */}
           <div className="vl-etape-video-col">
             {etape.video_url ? (
               <div className="vl-video-wrapper">
-                <video
-                  ref={videoRef}
-                  controls
-                  autoPlay
-                  className="vl-video"
-                  src={`http://localhost:8000${etape.video_url}`}
-                >
-                  Votre navigateur ne supporte pas la vidéo HTML5.
+                <video ref={videoRef} controls autoPlay className="vl-video"
+                  src={`http://localhost:8000${etape.video_url}`}>
+                  {t('visual.videoUnsupported')}
                 </video>
               </div>
             ) : (
               <div className="vl-no-video">
                 <span className="vl-no-video-icon">🎬</span>
-                <p>Animation non disponible pour cette étape</p>
-                <span>L'explication textuelle reste disponible</span>
+                <p>{t('visual.noVideo')}</p>
+                <span>{t('visual.noVideoSub')}</span>
               </div>
             )}
           </div>
-
-          {/* Explication textuelle */}
           <div className="vl-etape-text-col">
             <div className="vl-etape-explication">
               <div className="vl-explication-icon">💡</div>
               <p className="vl-explication-text">{etape.explication}</p>
             </div>
-
-            {/* Notion rappel */}
             <div className="vl-notion-chip">
-              <span>📌</span>
-              <span>{notion}</span>
+              <span>📌</span><span>{notion}</span>
             </div>
           </div>
-
         </div>
 
-        {/* Navigation */}
         <div className="vl-etape-controls">
-          <button
-            className="vl-btn-prev"
-            onClick={goPrev}
-            disabled={current === 0}
-          >
-            ← Étape précédente
+          <button className="vl-btn-prev" onClick={goPrev} disabled={current === 0}>
+            ← {t('visual.prevStep')}
           </button>
-
           <div className="vl-progress-bar-wrapper">
-            <div
-              className="vl-progress-bar-fill"
-              style={{ width: `${((current + 1) / total) * 100}%` }}
-            />
+            <div className="vl-progress-bar-fill"
+              style={{ width: `${((current + 1) / total) * 100}%` }} />
           </div>
-
           {current < total - 1 ? (
             <button className="vl-btn-next" onClick={goNext}>
-              Étape suivante →
+              {t('visual.nextStep')} →
             </button>
           ) : (
-            <div className="vl-completed-badge">
-              ✓ Toutes les étapes vues !
-            </div>
+            <div className="vl-completed-badge">✓ {t('visual.allDone')}</div>
           )}
         </div>
-
       </div>
     </div>
   );
 }
 
-// ══════════════════════════════════════════
-// COMPOSANT PRINCIPAL
-// ══════════════════════════════════════════
-
 export default function VisualLearning() {
+  const { t, i18n } = useTranslation();
   const [niveau, setNiveau]     = useState("");
   const [matiere, setMatiere]   = useState("");
   const [question, setQuestion] = useState("");
   const [image, setImage]       = useState(null);
-  const [language, setLanguage] = useState("fr");
-  const [step, setStep]         = useState("form"); // form | loading | result
+  const [step, setStep]         = useState("form");
   const [error, setError]       = useState(null);
   const [result, setResult]     = useState(null);
 
+  const language = ['ar','darija'].includes(i18n.language) ? i18n.language : 'fr';
   const canSubmit = niveau && matiere && (question.trim() || image);
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit) return;
-    setError(null);
-    setStep("loading");
+    setError(null); setStep("loading");
     try {
-      const payload = {
-        question: question.trim(),
-        niveau,
-        matiere,
-        language,
+      const res = await axios.post(API_URL, {
+        question: question.trim(), niveau, matiere, language,
         ...(image ? { image: image.base64 } : {}),
-      };
-      const res = await axios.post(API_URL, payload);
-      setResult(res.data);
-      setStep("result");
+      });
+      setResult(res.data); setStep("result");
     } catch (err) {
-      const msg = err.response?.data?.error ||
-        "Une erreur s'est produite. Vérifie que le backend Django est lancé.";
-      setError(msg);
+      setError(err.response?.data?.error || t('visual.errorGeneric'));
       setStep("form");
     }
-  }, [canSubmit, question, niveau, matiere, language, image]);
+  }, [canSubmit, question, niveau, matiere, language, image, t]);
 
   const handleReset = () => {
-    setStep("form");
-    setResult(null);
-    setError(null);
-    setQuestion("");
-    setImage(null);
+    setStep("form"); setResult(null); setError(null);
+    setQuestion(""); setImage(null);
   };
 
-  // ── FORMULAIRE ──────────────────────────
   if (step === "form") {
     return (
       <div className="vl-container">
-        <header className="vl-header">
-          <h1 className="vl-title">
-            <span className="vl-title-ar">تعلم بالذكاء الاصطناعي</span>
-            <span className="vl-title-fr">Apprendre avec l'IA</span>
-          </h1>
-          <p className="vl-subtitle">
-            Pose une question — l'IA génère une explication étape par étape
-            avec <strong>une animation pour chaque étape</strong>.
-          </p>
-        </header>
-
         <div className="vl-stepper">
-          <StepBadge step={1} label="Ta question" active={true} done={false} />
+          <StepBadge step={1} label={t('visual.step1')} active done={false} />
           <div className="vl-stepper-line" />
-          <StepBadge step={2} label="Génération" active={false} done={false} />
+          <StepBadge step={2} label={t('visual.step2')} active={false} done={false} />
           <div className="vl-stepper-line" />
-          <StepBadge step={3} label="Résultat" active={false} done={false} />
+          <StepBadge step={3} label={t('visual.step3')} active={false} done={false} />
         </div>
 
         <div className="vl-form-card">
           <div className="vl-form-row">
             <div className="vl-form-group">
-              <label htmlFor="vl-niveau">Niveau scolaire *</label>
-              <select id="vl-niveau" value={niveau} onChange={e => setNiveau(e.target.value)}>
-                <option value="">Sélectionne ton niveau</option>
+              <label>{t('visual.levelLabel')} *</label>
+              <select value={niveau} onChange={e => setNiveau(e.target.value)}>
+                <option value="">{t('visual.selectLevel')}</option>
                 {NIVEAUX.map(n => <option key={n} value={n}>{n}</option>)}
               </select>
             </div>
             <div className="vl-form-group">
-              <label htmlFor="vl-matiere">Matière *</label>
-              <select id="vl-matiere" value={matiere} onChange={e => setMatiere(e.target.value)}>
-                <option value="">Sélectionne la matière</option>
+              <label>{t('visual.subjectLabel')} *</label>
+              <select value={matiere} onChange={e => setMatiere(e.target.value)}>
+                <option value="">{t('visual.selectSubject')}</option>
                 {MATIERES.map(m => <option key={m} value={m}>{m}</option>)}
               </select>
             </div>
           </div>
 
           <div className="vl-form-group">
-            <label htmlFor="vl-question">
-              Ta question ou description du problème
+            <label>
+              {t('visual.questionLabel')}
               {!image && <span className="vl-required"> *</span>}
             </label>
-            <textarea
-              id="vl-question"
-              value={question}
-              onChange={e => setQuestion(e.target.value)}
-              placeholder="Ex : Comment résoudre une équation du second degré ? Comment fonctionne la photosynthèse ?"
-              rows={4}
-            />
+            <textarea value={question} onChange={e => setQuestion(e.target.value)}
+              placeholder={t('visual.questionPlaceholder')} rows={4} />
           </div>
 
           <div className="vl-form-group">
-            <label>Photo d'exercice <span className="vl-optional">(optionnel)</span></label>
+            <label>{t('visual.imageLabel')} <span className="vl-optional">({t('visual.optional')})</span></label>
             <ImageUploadZone image={image} onImageChange={setImage} onImageRemove={() => setImage(null)} />
-          </div>
-
-          <div className="vl-form-group">
-            <label>Langue de l'explication</label>
-            <div className="vl-lang-tabs">
-              {LANGUAGES.map(l => (
-                <button key={l.value}
-                  className={`vl-lang-tab ${language === l.value ? "active" : ""}`}
-                  onClick={() => setLanguage(l.value)} type="button">
-                  {l.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           {error && <div className="vl-error"><span>⚠️</span> {error}</div>}
 
           <button className="vl-btn-submit" onClick={handleSubmit} disabled={!canSubmit}>
-            <span>Générer l'explication</span>
+            <span>{t('visual.generate')}</span>
             <span className="vl-btn-arrow">→</span>
           </button>
         </div>
@@ -371,73 +272,64 @@ export default function VisualLearning() {
     );
   }
 
-  // ── LOADING ──────────────────────────────
   if (step === "loading") {
     return (
       <div className="vl-container">
         <div className="vl-stepper">
-          <StepBadge step={1} label="Ta question" active={false} done={true} />
+          <StepBadge step={1} label={t('visual.step1')} active={false} done />
           <div className="vl-stepper-line active" />
-          <StepBadge step={2} label="Génération" active={true} done={false} />
+          <StepBadge step={2} label={t('visual.step2')} active done={false} />
           <div className="vl-stepper-line" />
-          <StepBadge step={3} label="Résultat" active={false} done={false} />
+          <StepBadge step={3} label={t('visual.step3')} active={false} done={false} />
         </div>
         <LoadingScreen />
       </div>
     );
   }
 
-  // ── RÉSULTAT ─────────────────────────────
   if (step === "result" && result) {
     const etapes = result.etapes || [];
     return (
       <div className="vl-container">
         <div className="vl-stepper">
-          <StepBadge step={1} label="Ta question" active={false} done={true} />
+          <StepBadge step={1} label={t('visual.step1')} active={false} done />
           <div className="vl-stepper-line active" />
-          <StepBadge step={2} label="Génération" active={false} done={true} />
+          <StepBadge step={2} label={t('visual.step2')} active={false} done />
           <div className="vl-stepper-line active" />
-          <StepBadge step={3} label="Résultat" active={true} done={false} />
+          <StepBadge step={3} label={t('visual.step3')} active done={false} />
         </div>
 
-        {/* Notion clé */}
         <div className="vl-notion-banner">
-          <span className="vl-notion-label">Notion identifiée</span>
+          <span className="vl-notion-label">{t('visual.notionLabel')}</span>
           <h2 className="vl-notion-text">{result.notion_cle}</h2>
-          <span className="vl-etapes-count">{etapes.length} étapes</span>
+          <span className="vl-etapes-count">{etapes.length} {t('visual.steps')}</span>
         </div>
 
-        {/* Player étapes */}
         {etapes.length > 0 ? (
           <EtapesPlayer etapes={etapes} notion={result.notion_cle} />
         ) : (
-          <div className="vl-empty">Aucune étape générée.</div>
+          <div className="vl-empty">{t('visual.noSteps')}</div>
         )}
 
-        {/* Questions de compréhension */}
         {result.questions_comprehension?.length > 0 && (
           <section className="vl-section vl-section-questions">
             <h3 className="vl-section-title">
-              <span className="vl-section-icon">🧠</span>
-              Vérifie ta compréhension
+              <span className="vl-section-icon">🧠</span> {t('visual.comprehension')}
             </h3>
             <div className="vl-questions-list">
               {result.questions_comprehension.map((q, i) => (
                 <div key={i} className="vl-question-item">
-                  <span className="vl-q-num">Q{i + 1}</span>
-                  <p>{q}</p>
+                  <span className="vl-q-num">Q{i + 1}</span><p>{q}</p>
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Ressources IQRA */}
         {result.ressources_iqra?.length > 0 && (
           <section className="vl-section vl-section-ressources">
             <h3 className="vl-section-title">
-              <span className="vl-section-icon">📚</span>
-              Ressources IQRA associées
+              <span className="vl-section-icon">📚</span> {t('visual.resources')}
             </h3>
             <ul className="vl-ressources-list">
               {result.ressources_iqra.map((r, i) => (
@@ -451,7 +343,7 @@ export default function VisualLearning() {
 
         <div className="vl-result-actions">
           <button className="vl-btn-secondary" onClick={handleReset}>
-            ← Nouvelle question
+            ← {t('visual.newQuestion')}
           </button>
         </div>
       </div>

@@ -628,3 +628,11 @@
   .ca-welcome-card { padding: 18px 16px; }
   .ca-toggle-card-btn { font-size: 0.875rem; }
 }
+
+
+/* ── PageShell integration ── */
+.ps-body .ca-container {
+  padding-top: 0;
+  background: transparent;
+  min-height: unset;
+}

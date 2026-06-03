@@ -12,8 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
-from pathlib import Path
+from datetime import timedelta
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'api',
 ]
@@ -134,14 +134,27 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Modèle utilisateur personnalisé
+AUTH_USER_MODEL = 'api.CustomUser'
 
 
-CORS_ALLOWED_ORIGINS=[
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
     "http://localhost:3001",
-    ]
-CORS_ALLOW_ALL_ORIGINS = True    
+    "http://localhost:3002",
+]
+CORS_ALLOW_CREDENTIALS = True
 
 
+# JWT configuration
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':  timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS':  True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 ## Q2
 REST_FRAMEWORK = {
@@ -152,7 +165,28 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.MultiPartParser',  # Pour les images (F2)
     ],
-}  
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.authentication.CookieJWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# Google OAuth
+GOOGLE_CLIENT_ID     = os.environ.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+GOOGLE_REDIRECT_URI  = os.environ.get('GOOGLE_REDIRECT_URI', 'http://localhost:8000/api/auth/google/callback/')
+
+# Email (Gmail SMTP)
+EMAIL_BACKEND   = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST      = 'smtp.gmail.com'
+EMAIL_PORT      = 587
+EMAIL_USE_TLS   = True
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL  = EMAIL_HOST_USER
+
 #q3
 AI_ENGINE_PATH = os.path.join(BASE_DIR.parent, 'ai_engine')
 

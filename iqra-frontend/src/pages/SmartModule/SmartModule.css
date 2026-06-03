@@ -1333,3 +1333,15 @@
 .sp-plan-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
 .sp-back-btn { font-family: var(--ci-font); background: none; border: 1.5px solid #E2DDD8; color: #4A4640; padding: 7px 16px; border-radius: 40px; font-size: 13px; font-weight: 500; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
 .sp-back-btn:hover { border-color: #5B35A0; color: #5B35A0; }
+
+
+/* ── PageShell integration: reset shell background & min-height ── */
+.ps-body .ci-shell {
+  background: transparent;
+  min-height: unset;
+  padding-top: 0;
+  padding-bottom: 40px;
+}
+.ps-body .ci-shell--center {
+  min-height: 400px;
+}

@@ -94,6 +94,57 @@
 
 .btn-signup:hover { background: #7B2FBE; }
 
+/* Language dropdown */
+.lang-dropdown { position: relative; }
+
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f0f8;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.lang-toggle:hover { background: #ede6f5; color: #8e55a1; }
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  min-width: 150px;
+  overflow: hidden;
+  z-index: 2000;
+  animation: dropdownFade 0.15s ease;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+.lang-option:hover       { background: #f8f4fb; color: #8e55a1; }
+.lang-option--active     { color: #8e55a1; font-weight: 700; }
+
 .burger {
   display: none;
   flex-direction: column;
@@ -104,12 +155,154 @@
   padding: 4px;
 }
 
-.burger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: #333;
-  border-radius: 2px;
+/* Styles avatar navbar pour utilisateur connecté */
+.navbar-user {
+  position: relative;
+}
+
+.navbar-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8e55a1, #c084d8);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(142,85,161,0.25);
+}
+
+.navbar-avatar:hover {
+  box-shadow: 0 4px 16px rgba(142,85,161,0.4);
+  transform: translateY(-1px);
+}
+
+/* Dropdown */
+.navbar-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.14), 0 0 0 1px rgba(142,85,161,0.08);
+  min-width: 240px;
+  z-index: 2000;
+  overflow: hidden;
+  animation: dropdownFade 0.18s cubic-bezier(.22,.68,0,1.2);
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdown-header {
+  background: linear-gradient(135deg, #8e55a1 0%, #c084d8 100%);
+  padding: 18px 18px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dropdown-avatar-sm {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dropdown-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.dropdown-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-email {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f5f0f8;
+  margin: 4px 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+  border-radius: 0;
+}
+
+.dropdown-item:hover {
+  background: #f8f4fb;
+  color: #8e55a1;
+}
+
+.dropdown-logout {
+  color: #e53935;
+}
+
+.dropdown-logout:hover {
+  background: #fff5f5;
+  color: #c62828;
+}
+
+.btn-logout-nav {
+  background: transparent;
+  border: 1.5px solid #ccc;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-logout-nav:hover {
+  border-color: #e53935;
+  color: #e53935;
 }
 
 @media (max-width: 768px) {
