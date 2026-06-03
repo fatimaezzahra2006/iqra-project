@@ -2,6 +2,7 @@
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { saveCareerResult } from "../../utils/activity";
 import {
   Chart as ChartJS, RadialLinearScale, PointElement, LineElement,
   Filler, Tooltip, Legend, CategoryScale, LinearScale, BarElement,
@@ -512,6 +513,7 @@ export default function CareerAdvisor() {  const [screen,      setScreen]     = 
         language: i18n.language,
       });
       setResultats(res.data);
+      saveCareerResult(res.data);
       setScreen(SCREEN.DASHBOARD);
     } catch {
       setError(t('career.errAnalyse'));

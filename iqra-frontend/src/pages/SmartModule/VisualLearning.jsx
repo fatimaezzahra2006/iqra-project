@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import { saveVisualSession } from "../../utils/activity";
 import "./VisualLearning.css";
 
 const API_URL = "http://localhost:8000/api/visual-learning/";
@@ -206,7 +207,9 @@ export default function VisualLearning() {
         question: question.trim(), niveau, matiere, language,
         ...(image ? { image: image.base64 } : {}),
       });
-      setResult(res.data); setStep("result");
+      setResult(res.data);
+      saveVisualSession({ title: res.data.notion_cle || question.trim(), matiere });
+      setStep("result");
     } catch (err) {
       setError(err.response?.data?.error || t('visual.errorGeneric'));
       setStep("form");

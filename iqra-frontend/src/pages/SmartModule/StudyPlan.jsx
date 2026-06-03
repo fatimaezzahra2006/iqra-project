@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import { saveStudyPlan } from "../../utils/activity";
 import "./SmartModule.css";
 
 const API = "http://127.0.0.1:8000/api";
@@ -550,6 +551,7 @@ export default function StudyPlan({ onBack }) {
         reponses_motivation,
       });
       setPlan(res.data.plan);
+      saveStudyPlan({ matiere, niveau: filiereValue, weeks: parseInt(semaines) || 1 });
       setScreen("plan");
     } catch (err) {
       setError(t('study.errorApi') + (err.response?.data?.error || err.message));
