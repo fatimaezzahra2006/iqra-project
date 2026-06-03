@@ -105,27 +105,26 @@ const Dashboard = () => {
         <Link to="/profile" className="db2-avatar" title={t('dashboard.profile_tooltip')}>{initials}</Link>
       </div>
 
-      {/* ── STATS ── */}
-      {hasActivity && (
-        <div className="db2-stats-row">
-          {[
-            { icon: '📚', label: t('dashboard.stat_plans'),  value: studyPlans.length,     color: '#8e55a1' },
-            { icon: '🎥', label: t('dashboard.stat_visual'), value: visualSessions.length, color: '#0ea5e9' },
-            { icon: '🎯', label: t('dashboard.stat_career'), value: careerDone ? 1 : 0,    color: '#f59e0b' },
-          ].map(s => (
-            <div key={s.label} className="db2-stat" style={{ '--c': s.color }}>
-              <span className="db2-stat-icon">{s.icon}</span>
-              <div>
-                <div className="db2-stat-value">{s.value}</div>
-                <div className="db2-stat-label">{s.label}</div>
-              </div>
+      {/* ── STATS — always visible ── */}
+      <div className="db2-stats-row">
+        {[
+          { icon: '📚', label: t('dashboard.stat_plans'),  value: studyPlans.length,     color: '#8e55a1', to: '/study-plan' },
+          { icon: '🎥', label: t('dashboard.stat_visual'), value: visualSessions.length, color: '#0ea5e9', to: '/visual-learning' },
+          { icon: '🎯', label: t('dashboard.stat_career'), value: careerDone ? 1 : 0,    color: '#f59e0b', to: '/career-advisor' },
+        ].map(s => (
+          <div key={s.label} className="db2-stat" style={{ '--c': s.color }}
+            onClick={() => navigate(s.to)} role="button">
+            <span className="db2-stat-icon">{s.icon}</span>
+            <div>
+              <div className="db2-stat-value">{s.value}</div>
+              <div className="db2-stat-label">{s.label}</div>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
 
-      {/* ── WELCOME BANNER ── */}
-      {!hasActivity && (
+      {/* ── WELCOME BANNER (new users) or QUICK SUMMARY (returning) ── */}
+      {!hasActivity ? (
         <div className="db2-welcome">
           <div className="db2-welcome-left">
             <span className="db2-welcome-badge">{t('dashboard.welcome_badge')}</span>
@@ -136,6 +135,12 @@ const Dashboard = () => {
             </button>
           </div>
           <div className="db2-welcome-art">🎓</div>
+        </div>
+      ) : (
+        <div className="db2-summary-bar">
+          <span className="db2-summary-text">
+            📅 {t('dashboard.sub_activity', { date: fmtDate(lastActivity) })}
+          </span>
         </div>
       )}
 
