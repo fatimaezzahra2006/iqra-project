@@ -14,9 +14,13 @@ from pathlib import Path
 import os
 from datetime import timedelta
 import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Charger le fichier .env situé dans BASE_DIR (iqra-backend/iqra_backend/)
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
